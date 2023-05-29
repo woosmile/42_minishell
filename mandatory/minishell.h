@@ -78,43 +78,62 @@ typedef struct s_cmd
 // 	struct s_ast	*right;  //left == NULL && right == NULL (->end node)
 // }	t_ast;
 
+typedef struct s_quotes
+{
+	int		detect;
+	char	type;
+}	t_quotes;
+
+typedef struct s_exp
+{
+	char			*str;
+	struct s_exp	*next;
+}	t_exp;
+
+int				error_handling(int num);
+
 t_env			*env_list_init(char **envp, t_env *env_head, \
 								t_env *temp, t_env *new);
 char			**env_conv_arr(t_env *env_head);
 
-int				error_handling(int num);
 void			env_list_free(t_env *head);
 void			free_double_ptr(char **ptr);
 void			token_list_free(t_token *token_head);
 void			cmd_list_free(t_cmd	*cmd_head);
 
-char			**split_str(char *s);
-int				blank_masking(char *s, size_t s_len, int *word_rec);
+char			**split_str(char *s, size_t str_cnt, size_t s_len, \
+							char **str_arr);
+int				split_null_guard(char **str_arr, int i);
+int				blank_masking(char *s, size_t s_len, char *word_rec);
 int				check_sep(char const s, char *charset);
-void			check_quotes(char s, char *quotes_type, int *detect);
+void			check_quotes(char s, t_quotes *q);
 void			check_metacharacter(const char *s, int *i, \
-									size_t *cnt, int *word_rec);
+									size_t *cnt, char *word_rec);
 int				split_null_guard(char **str_arr, int i);
 
 t_token			*token_list_init(char **split, t_token_type *type, \
 								t_token *temp, t_token *new);
-t_token_type	*check_ingredient(char **split);
+t_token			*new_token_node(t_token_type type, char *split, t_token *prev);
+int				syntax_check(t_token *token_head, t_token_type type, \
+							int redir_flag, int pipe_flag);
+t_token			*token_list_combine(t_token *token_head, t_token *temp);
+void			token_list_renew(t_token **token_head, t_token **temp, \
+								t_token *prev_temp);
 
 t_cmd			*cmd_list_init(char *str, t_cmd *cmd_head, t_env *env_head);
 t_cmd			*new_cmd_node(t_cmd *prev);
-t_token_type	check_redir_type(t_token_type type, t_token *token_head);
-void			token_list_renew(t_token **token_head, t_token **temp, \
-								t_token *prev_temp);
 void			rewind_words_redirs_list(t_cmd *cmd_head);
 
-void			expansion_main(t_cmd *cmd_head, t_env *env_head);
-char			*env_get_value(t_env *env_head, char *name);
-void			envp_value(t_env *env_head, char **envp_bundle, \
-							int envp_arr_cnt);
-void			envp_name(t_token *temp, int *word_rec, \
-							char **envp_bundle, size_t str_len);
-void			envp_name_input(t_token *temp, char *envp_name, \
-								int name_len, size_t *w_idx);
-void			str_renew(t_token *temp, int *word_rec, char **envp_bundle);
+void			expansion(t_token *token_head, t_env *env_head);
+char			*env_get_value(t_env *env_head, char *name);   //builtin.c
+char			**env_arr(t_env *env_head, t_token *temp, char *word_rec);
+t_exp			*exp_list(t_token *temp, t_exp *exp_head, \
+							char *word_rec, char **exp_bundle);
+t_exp			*new_exp_node(char *str);
+void			exp_list_add_back(t_exp **exp_head, t_exp *new);
+void			exp_list_add_split(t_exp **exp_head, t_exp *new, \
+									char **exp_split);
+void			free_exp_list(t_exp *exp_head);
+void			str_renew(t_token *temp, t_exp *exp, char *word_rec);
 
 #endif

@@ -12,6 +12,8 @@
 
 #include "minishell.h"
 
+extern int	g_exit_status;
+
 void	free_double_ptr(char **ptr)
 {
 	int	i;
@@ -42,20 +44,6 @@ void	env_list_free(t_env *head)
 	}
 }
 
-void	token_list_free(t_token *token_head)
-{
-	t_token	*temp;
-
-	temp = token_head;
-	while (temp != NULL)
-	{
-		temp = token_head->next;
-		free(token_head->str);
-		free(token_head);
-		token_head = temp;
-	}
-}
-
 void	cmd_list_free(t_cmd	*cmd_head)
 {
 	t_cmd	*temp;
@@ -73,8 +61,7 @@ void	cmd_list_free(t_cmd	*cmd_head)
 
 int	error_handling(int num)
 {
-	int	result;
-
+	g_exit_status = 2;
 	if (num == 1)
 		write(2, "Error : unclosed quotation marks.\n", 34);
 	else if (num == 2)
@@ -87,9 +74,5 @@ int	error_handling(int num)
 		write(2, "Error : nothing after redirection.\n", 35);
 	else if (num == 6)
 		write(2, "Error : nothing after pipe.\n", 28);
-	if (num == 0)
-		result = 0;
-	else
-		result = 1;
-	return (result);
+	return (1);
 }

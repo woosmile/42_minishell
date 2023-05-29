@@ -25,7 +25,7 @@ int	check_sep(char c, char *charset)
 	return (0);
 }
 
-void	check_metacharacter(const char *s, int *i, size_t *cnt, int *word_rec)
+void	check_metacharacter(const char *s, int *i, size_t *cnt, char *word_rec)
 {
 	char	*charset;
 
@@ -52,15 +52,15 @@ void	check_metacharacter(const char *s, int *i, size_t *cnt, int *word_rec)
 	}
 }
 
-void	check_quotes(char s, char *quotes_type, int *detect)
+void	check_quotes(char s, t_quotes *q)
 {
-	if (*detect == 0 && (s == '\'' || s == '\"'))
+	if (q->detect == 0 && (s == '\'' || s == '\"'))
 	{
-		*detect = 1;
-		*quotes_type = s;
+		q->detect = 1;
+		q->type = s;
 	}
-	else if (*detect == 1 && (s == *quotes_type))
-		*detect = 0;
+	else if (q->detect == 1 && (s == q->type))
+		q->detect = 0;
 }
 
 int	split_null_guard(char **str_arr, int i)
@@ -74,25 +74,24 @@ int	split_null_guard(char **str_arr, int i)
 	return (0);
 }
 
-int	blank_masking(char *s, size_t s_len, int *word_rec)
+int	blank_masking(char *s, size_t s_len, char *word_rec)
 {
-	size_t	i;
-	char	quotes_type;
-	int		detect;
+	size_t		i;
+	t_quotes	q;
 
 	i = 0;
-	detect = 0;
+	q.detect = 0;
 	while (i < s_len)
 	{
-		check_quotes(s[i], &quotes_type, &detect);
-		if (detect == 0)
+		check_quotes(s[i], &q);
+		if (q.detect == 0)
 		{
 			if (s[i] == ' ')
 				word_rec[i] = ' ';
 		}
 		i++;
 	}
-	if (detect)
+	if (q.detect)
 		return (error_handling(1));
 	return (0);
 }

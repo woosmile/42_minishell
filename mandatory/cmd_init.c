@@ -12,27 +12,31 @@
 
 #include "minishell.h"
 
-t_token	*token_combine(t_token *token_head, t_token *temp)
+t_token_type	*check_ingredient(char **split)
 {
-	t_token_type	type;
-	int				redir_flag;
+	t_token_type	*type;
+	int				len;
+	int				i;
 
-	redir_flag = 0;
-	while (temp)
+	len = 0;
+	while (split[len] != NULL)
+		len++;
+	type = (t_token_type *)malloc(sizeof(t_token_type) * len);
+	if (!type)
+		return (NULL);
+	i = 0;
+	while (split[i] != NULL)
 	{
-		type = temp->type;
-		if (type == REDIR)
-			redir_flag = 1;
-		else if (type == WORD && redir_flag == 1)
-		{
-			redir_flag = 0;
-			type = check_redir_type(type, temp->prev);
-			temp->type = type;
-			token_list_renew(&token_head, &temp, temp->prev);
-		}
-		temp = temp->next;
+		if (!ft_strncmp(">", split[i], 2) || !ft_strncmp("<", split[i], 2) \
+		|| !ft_strncmp(">>", split[i], 3) || !ft_strncmp("<<", split[i], 3))
+			type[i] = REDIR;
+		else if (!ft_strncmp("|", split[i], 2))
+			type[i] = PIPE;
+		else
+			type[i] = WORD;
+		i++;
 	}
-	return (token_head);
+	return (type);
 }
 
 void	cmd_word_list(t_cmd *cmd_temp, t_token *words, \
@@ -128,17 +132,23 @@ t_cmd	*cmd_list_init(char *str, t_cmd *cmd_head, t_env *env_head)
 	t_token			*token_head;
 	t_token_type	*type;
 
-	split = split_str(str);
+	split = split_str(str, 0, 0, NULL);
 	if (!split)
 		return (NULL);
 	type = check_ingredient(split);
-	token_head = token_list_init(split, type, NULL, NULL);
-	if (!token_head)
+	if (!type)
+	{
+		free_double_ptr(split);
 		return (NULL);
-	token_head = token_combine(token_head, token_head);
-	cmd_head = words_redirs_init(NULL, NULL, token_head, token_head);
-	expansion_main(cmd_head, env_head);
+	}
+	token_head = token_list_init(split, type, NULL, NULL);
 	free_double_ptr(split);
 	free(type);
+	if (token_head)
+	{
+		token_head = token_list_combine(token_head, token_head);
+		expansion(token_head, env_head);
+		// cmd_head = words_redirs_init(NULL, NULL, token_head, token_head);
+	}
 	return (cmd_head);
 }

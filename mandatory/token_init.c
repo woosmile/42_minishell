@@ -12,94 +12,40 @@
 
 #include "minishell.h"
 
-t_token_type	*check_ingredient(char **split)
+t_token_type	check_redir_type(t_token_type type, t_token *token_head)
 {
-	t_token_type	*type;
-	int				len;
-	int				i;
-
-	len = 0;
-	while (split[len] != NULL)
-		len++;
-	type = (t_token_type *)malloc(sizeof(t_token_type) * len);
-	i = 0;
-	while (split[i] != NULL)
-	{
-		if (!ft_strncmp(">", split[i], 2) || !ft_strncmp("<", split[i], 2) \
-		|| !ft_strncmp(">>", split[i], 3) || !ft_strncmp("<<", split[i], 3))
-			type[i] = REDIR;
-		else if (!ft_strncmp("|", split[i], 2))
-			type[i] = PIPE;
-		else
-			type[i] = WORD;
-		i++;
-	}
+	if (!ft_strncmp("<", token_head->str, 2))
+		type = INFILE;
+	else if (!ft_strncmp(">", token_head->str, 2))
+		type = OUTFILE;
+	else if (!ft_strncmp("<<", token_head->str, 3))
+		type = HEREDOC;
+	else if (!ft_strncmp(">>", token_head->str, 3))
+		type = APPEND;
 	return (type);
 }
 
-t_token	*new_token_node(t_token_type type, char *split, t_token *prev)
+t_token	*token_list_combine(t_token *token_head, t_token *temp)
 {
-	t_token	*node;
+	t_token_type	type;
+	int				redir_flag;
 
-	node = (t_token *)malloc(sizeof(t_token));
-	node->type = type;
-	node->str = ft_strdup(split);
-	node->next = NULL;
-	node->prev = prev;
-	return (node);
-}
-
-int	syntax_error(t_token *token_head, int redir_flag, int pipe_flag, int mode)
-{
-	if (mode == 0)
-		return (error_handling(2));
-	else if (mode == 1)
+	redir_flag = 0;
+	while (temp)
 	{
-		if (redir_flag == 1)
-			return (error_handling(4));
-		else if (token_head->next == NULL)
-			return (error_handling(5));
-	}
-	else if (mode == 2)
-	{
-		if (redir_flag == 1)
-			return (error_handling(3));
-		else if (pipe_flag == 1)
-			return (error_handling(2));
-		else if (token_head->next == NULL)
-			return (error_handling(6));
-	}
-	return (0);
-}
-
-int	check_syntax(t_token *token_head, t_token_type type, \
-				int redir_flag, int pipe_flag)
-{
-	if (type == PIPE)
-		return (syntax_error(token_head, redir_flag, pipe_flag, 0));
-	while (token_head)
-	{
-		type = token_head->type;
+		type = temp->type;
 		if (type == REDIR)
-		{
-			if (syntax_error(token_head, redir_flag, pipe_flag, 1) == 1)
-				return (1);
 			redir_flag = 1;
-		}
-		else if (type == PIPE)
-		{
-			if (syntax_error(token_head, redir_flag, pipe_flag, 2) == 1)
-				return (1);
-			pipe_flag = 1;
-		}
-		else if (type == WORD)
+		else if (type == WORD && redir_flag == 1)
 		{
 			redir_flag = 0;
-			pipe_flag = 0;
+			type = check_redir_type(type, temp->prev);
+			temp->type = type;
+			token_list_renew(&token_head, &temp, temp->prev);
 		}
-		token_head = token_head->next;
+		temp = temp->next;
 	}
-	return (0);
+	return (token_head);
 }
 
 t_token	*token_list_init(char **split, t_token_type *type, \
@@ -124,7 +70,7 @@ t_token	*token_list_init(char **split, t_token_type *type, \
 		}
 		i++;
 	}
-	if (check_syntax(token_head, token_head->type, 0, 0))
+	if (syntax_check(token_head, token_head->type, 0, 0))
 	{
 		token_list_free(token_head);
 		return (NULL);

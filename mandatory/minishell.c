@@ -18,6 +18,7 @@ void	check_leak(void)
 	system("leaks --list minishell");
 }
 */
+int	g_exit_status;
 
 int	main(int argc, char **argv, char **envp)
 {
@@ -37,7 +38,7 @@ int	main(int argc, char **argv, char **envp)
 	// 	printf("%s\n", env_head->content);
 	// 	env_head = env_head->next;
 	// }
-
+	g_exit_status = 123;
 	while (1)
 	{
 		str = readline("$> ");
@@ -45,6 +46,7 @@ int	main(int argc, char **argv, char **envp)
 		if (!cmd_head)
 			return (1);
 		//TEST CMD LIST
+		/*
 		while (cmd_head)
 		{
 			while (cmd_head->words)
@@ -65,6 +67,7 @@ int	main(int argc, char **argv, char **envp)
 			if (cmd_head != NULL)
 				printf("\n\nPIPE\n\n");
 		}
+		*/
 		cmd_list_free(cmd_head);
 	}
 
