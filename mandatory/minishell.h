@@ -135,6 +135,6 @@ void			exp_list_add_back(t_exp **exp_head, t_exp *new);
 void			exp_list_add_split(t_exp **exp_head, t_exp *new, \
 									char **exp_split, char *exp_bundle);
 void			free_exp_list(t_exp *exp_head);
-t_token			*expansion_str(t_token *temp, t_exp *exp_head, char *word_rec);
+t_token			*expansion_str(t_token *temp, char *str_temp, t_exp *exp_head, char *word_rec);
 
 #endif

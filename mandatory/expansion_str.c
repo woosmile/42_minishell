@@ -6,7 +6,7 @@
 /*   By: woosekim <woosekim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 14:33:24 by woosekim          #+#    #+#             */
-/*   Updated: 2023/05/30 20:44:46 by woosekim         ###   ########.fr       */
+/*   Updated: 2023/05/31 01:22:15 by woosekim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,67 +163,117 @@ int	new_str_len(char *word_rec, t_exp *exp_head, size_t *idx)
 	return (new_len);
 }*/
 
-t_token	*expansion_create_token(t_token *temp, t_exp *exp_head)
+t_token	*expansion_create_token(t_token *temp, t_exp **exp_head)
 {
 	t_token	*node;
 	
-	while (exp_head->str != NULL && exp_head != NULL)
+	while ((*exp_head)->str != NULL && (*exp_head) != NULL)
 	{
-		node = new_token_node(WORD, exp_head->str, temp);
-		node->next = temp->next;
-		temp->next->prev = node;
+		node = new_token_node(WORD, (*exp_head)->str, temp);
+		if (temp->next)
+		{
+			node->next = temp->next;
+			temp->next->prev = node;
+		}
 		temp->next = node;
 		temp = temp->next;	
-		exp_head = exp_head->next;
+		(*exp_head) = (*exp_head)->next;
 	}
 	return (temp);
 }
 
-t_token	*expansion_str(t_token *temp, t_exp *exp_head, char *word_rec)
+char	*front_str_combine(char *str_temp, int s_idx, char *str_comb, t_exp *exp_head)
+{
+	char	*str_new;
+	char	*old_str;
+
+	str_new = ft_substr(str_temp, 0, s_idx);
+	if (exp_head->str != NULL)
+	{
+		old_str = str_new;
+		str_new = ft_strjoin(str_new, exp_head->str);
+		free(old_str);
+	}
+	if (!str_comb)
+		str_comb = str_new;
+	else
+	{
+		old_str = str_comb;
+		str_comb = ft_strjoin(str_comb, str_new);
+		free(old_str);
+		free(str_new);
+	}
+	return (str_comb);
+}
+
+void	rear_str_combine(t_token *temp, char *str_temp, int s_idx, char *str_comb)
+{
+	char	*str_new;
+	char	*str_old;
+
+	if (s_idx > 0)
+	{
+		str_new = ft_substr(str_temp, 0, s_idx);
+		if (!str_comb)
+			str_comb = str_new;
+		else
+		{
+			str_old = str_comb;
+			str_comb = ft_strjoin(str_comb, str_new);
+			free(str_old);
+			free(str_new);
+		}
+	}
+	if (temp->str != str_comb)
+		free(temp->str);
+	temp->str = str_comb;
+}
+
+char	*idx_init(char *word_rec, int *w_idx, char *str_temp, int *s_idx)
+{
+	(*w_idx)++;
+	while (word_rec[*w_idx] == 0)
+		(*w_idx)++;
+	if (word_rec[*w_idx] != -1)
+		str_temp = str_temp + *w_idx;
+	*s_idx = 0;
+	return (str_temp);
+}
+
+t_token *check_expansion_list(t_token *temp, t_exp **exp_head, char **str_comb)
+{
+	(*exp_head) = (*exp_head)->next;
+	if ((*exp_head)->str == NULL)
+		(*exp_head) = (*exp_head)->next;
+	else
+	{
+		free(temp->str);
+		temp->str = ft_strdup(*str_comb);
+		if (!temp->str)
+			exit(1);
+		free(*str_comb);
+		temp = expansion_create_token(temp, exp_head);
+		*str_comb = temp->str;
+	}
+	return (temp);
+}
+
+t_token	*expansion_str(t_token *temp, char *str_temp, t_exp *exp_head, char *word_rec)
 {
 	int		w_idx;
 	int		s_idx;
-	char	*new_str;
-	char	*old_temp;
-	char	*comb_str;
-	char	*str_temp;
-	char	*last_str;
+	char	*str_comb;
 
 	w_idx = 0;
 	s_idx = 0;
-	comb_str = NULL;
-	str_temp = temp->str;
+	str_comb = NULL;
 	while (word_rec[w_idx] != -1)
 	{
 		if (word_rec[w_idx] == '$')
 		{
-			new_str = ft_substr(str_temp, 0, s_idx);
-			old_temp = new_str;
-			if (exp_head->str != NULL)
-				new_str = ft_strjoin(new_str, exp_head->str);
-			free(old_temp);
-			if (!comb_str)
-				comb_str = new_str;
-			else
-			{
-				old_temp = comb_str;
-				comb_str = ft_strjoin(comb_str, new_str);
-				free(old_temp);
-			}
-			exp_head = exp_head->next;
-			if (exp_head->str == NULL)
-				exp_head = exp_head->next;
-			else
-			{
-				free(temp->str);
-				temp->str = comb_str;
-				temp = expansion_create_token(temp, exp_head);
-			}
-			w_idx++;
-			while (word_rec[w_idx] == 0)
-				w_idx++;
-			str_temp = str_temp + w_idx;
-			s_idx = 0;
+			str_comb = front_str_combine(str_temp, s_idx, str_comb, exp_head);
+			temp = check_expansion_list(temp, &exp_head, &str_comb);
+			str_temp = idx_init(word_rec, &w_idx, temp->str, &s_idx);
 		}
 		else
 		{
@@ -231,21 +281,8 @@ t_token	*expansion_str(t_token *temp, t_exp *exp_head, char *word_rec)
 			s_idx++;
 		}
 	}
-	last_str = ft_substr(str_temp, 0, s_idx);
-	if (*last_str)
-	{
-		if (!comb_str)
-			comb_str = last_str;
-		else
-		{
-			old_temp = comb_str;
-			comb_str = ft_strjoin(comb_str, last_str);
-			free(old_temp);
-			free(last_str);
-		}
-	}
-	free(temp->str);
-	temp->str = comb_str;
+	rear_str_combine(temp, str_temp, s_idx, str_comb);
+	
 	return (temp);
 }
 /*
