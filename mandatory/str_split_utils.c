@@ -91,7 +91,9 @@ int	blank_masking(char *s, size_t s_len, char *word_rec)
 		}
 		i++;
 	}
-	if (q.detect)
+	if (q.detect && q.type == '\'')
 		return (error_handling(1));
+	if (q.detect && q.type == '\"')
+		return (error_handling(2));
 	return (0);
 }

@@ -148,6 +148,13 @@ t_cmd	*cmd_list_init(char *str, t_cmd *cmd_head, t_env *env_head)
 	{
 		token_head = token_list_combine(token_head, token_head);
 		expansion(token_head, env_head);
+		while (token_head)
+		{
+			printf("type : %d\n", token_head->type);
+			printf("str : %s\n", token_head->str);
+			printf("\nNEXT TOKEN\n\n");
+			token_head = token_head->next;
+		}
 		// cmd_head = words_redirs_init(NULL, NULL, token_head, token_head);
 	}
 	return (cmd_head);

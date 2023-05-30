@@ -6,7 +6,7 @@
 /*   By: woosekim <woosekim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 02:02:12 by woosekim          #+#    #+#             */
-/*   Updated: 2023/05/29 21:35:09 by woosekim         ###   ########.fr       */
+/*   Updated: 2023/05/30 19:42:41 by woosekim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,9 @@ void	expansion(t_token *token_head, t_env *env_head)
 			x_0++;
 		}
 		printf("\n");
+		*/
 		//exp_bundle TEST
+		/*
 		int	x;
 		x = 0;
 		while (x < exp_arr_cnt)
@@ -92,6 +94,7 @@ void	expansion(t_token *token_head, t_env *env_head)
 		}
 		*/
 		exp_head = exp_list(token_head, NULL, word_rec, exp_bundle);
+		//exp list TEST
 		/*
 		while (exp_head)
 		{
@@ -102,8 +105,8 @@ void	expansion(t_token *token_head, t_env *env_head)
 			exp_head = exp_head->next;
 		}
 		*/
+		token_head = expansion_str(token_head, exp_head, word_rec);
 		free_double_ptr(exp_bundle);
-		// str_renew(token_head, exp_head, word_rec);
 		free(word_rec);
 		free_exp_list(exp_head);
 		token_head = token_head->next;

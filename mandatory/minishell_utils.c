@@ -59,20 +59,27 @@ void	cmd_list_free(t_cmd	*cmd_head)
 	}
 }
 
-int	error_handling(int num)
+int	error_handling(int select)
 {
-	g_exit_status = 2;
-	if (num == 1)
-		write(2, "Error : unclosed quotation marks.\n", 34);
-	else if (num == 2)
-		write(2, "Error : invalid pipe.\n", 22);
-	else if (num == 3)
-		write(2, "Error : pipe immediately after redirection.\n", 44);
-	else if (num == 4)
-		write(2, "Error : redirection immediately after redirection.\n", 51);
-	else if (num == 5)
-		write(2, "Error : nothing after redirection.\n", 35);
-	else if (num == 6)
-		write(2, "Error : nothing after pipe.\n", 28);
+	if (select == 1)
+		write(2, "minishell: syntax error unclosed quotation mark '\n", 50);
+	else if (select == 2)
+		write(2, "minishell: syntax error unclosed quotation mark \"\n", 50);
+	else if (select == 3)
+		write(2, "minishell: syntax error near unexpected token `|'\n", 50);
+	else if (select == 4)
+	{
+		write(2, "minishell: ", 11);
+		write(2, "syntax error near unexpected token `newline'\n", 45);
+	}
+	else if (select == 5)
+		write(2, "minishell: syntax error near unexpected token `<'\n", 50);
+	else if (select == 6)
+		write(2, "minishell: syntax error near unexpected token `>'\n", 50);
+	else if (select == 7)
+		write(2, "minishell: syntax error near unexpected token `<<'\n", 51);
+	else if (select == 8)
+		write(2, "minishell: syntax error near unexpected token `>>\'\n", 51);
+	g_exit_status = 258;
 	return (1);
 }

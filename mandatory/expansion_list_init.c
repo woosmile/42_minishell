@@ -6,7 +6,7 @@
 /*   By: woosekim <woosekim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 21:14:51 by woosekim          #+#    #+#             */
-/*   Updated: 2023/05/29 21:35:08 by woosekim         ###   ########.fr       */
+/*   Updated: 2023/05/30 16:40:43 by woosekim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,9 +43,10 @@ void	exp_list_init(t_token *temp, t_exp **exp_head, \
 	char	**exp_split;
 	t_exp	*new;
 
-	if (q.detect == 1 && q.type == '\"')
+	if ((q.detect == 1 && q.type == '\"') || exp_bundle == NULL)
 	{
 		new = new_exp_node(exp_bundle);
+		new->div = 0;
 		exp_list_add_back(exp_head, new);
 	}
 	else
@@ -55,7 +56,7 @@ void	exp_list_init(t_token *temp, t_exp **exp_head, \
 			exit(1);
 		if (check_ambiguous(temp, exp_split))
 			return ;
-		exp_list_add_split(exp_head, NULL, exp_split);
+		exp_list_add_split(exp_head, NULL, exp_split, exp_bundle);
 		free_double_ptr(exp_split);
 	}
 	new = new_exp_node(NULL);

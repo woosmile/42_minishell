@@ -6,7 +6,7 @@
 /*   By: woosekim <woosekim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 14:08:45 by woosekim          #+#    #+#             */
-/*   Updated: 2023/05/29 14:22:02 by woosekim         ###   ########.fr       */
+/*   Updated: 2023/05/30 14:12:36 by woosekim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,22 +50,27 @@ void	token_list_renew(t_token **token_head, t_token **temp, \
 int	syntax_error(t_token *token_head, int redir_flag, int pipe_flag, int mode)
 {
 	if (mode == 0)
-		return (error_handling(2));
+		return (error_handling(3));
 	else if (mode == 1)
 	{
 		if (redir_flag == 1)
-			return (error_handling(4));
+		{
+			if (ft_strncmp("<", token_head->str, 2) == 0)
+				return (error_handling(5));
+			else if (ft_strncmp(">", token_head->str, 2) == 0)
+				return (error_handling(6));
+			else if (ft_strncmp("<<", token_head->str, 3) == 0)
+				return (error_handling(7));
+			else if (ft_strncmp(">>", token_head->str, 3) == 0)
+				return (error_handling(8));
+		}
 		else if (token_head->next == NULL)
-			return (error_handling(5));
+			return (error_handling(4));
 	}
 	else if (mode == 2)
 	{
-		if (redir_flag == 1)
+		if (redir_flag == 1 || pipe_flag == 1 || token_head->next == NULL)
 			return (error_handling(3));
-		else if (pipe_flag == 1)
-			return (error_handling(2));
-		else if (token_head->next == NULL)
-			return (error_handling(6));
 	}
 	return (0);
 }

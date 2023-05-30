@@ -87,10 +87,11 @@ typedef struct s_quotes
 typedef struct s_exp
 {
 	char			*str;
+	int				div;
 	struct s_exp	*next;
 }	t_exp;
 
-int				error_handling(int num);
+int				error_handling(int select);
 
 t_env			*env_list_init(char **envp, t_env *env_head, \
 								t_env *temp, t_env *new);
@@ -132,8 +133,8 @@ t_exp			*exp_list(t_token *temp, t_exp *exp_head, \
 t_exp			*new_exp_node(char *str);
 void			exp_list_add_back(t_exp **exp_head, t_exp *new);
 void			exp_list_add_split(t_exp **exp_head, t_exp *new, \
-									char **exp_split);
+									char **exp_split, char *exp_bundle);
 void			free_exp_list(t_exp *exp_head);
-void			str_renew(t_token *temp, t_exp *exp, char *word_rec);
+t_token			*expansion_str(t_token *temp, t_exp *exp_head, char *word_rec);
 
 #endif

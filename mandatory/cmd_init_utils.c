@@ -6,7 +6,7 @@
 /*   By: woosekim <woosekim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/23 19:01:53 by woosekim          #+#    #+#             */
-/*   Updated: 2023/05/29 14:14:33 by woosekim         ###   ########.fr       */
+/*   Updated: 2023/05/30 14:30:47 by woosekim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,4 +45,3 @@ void	rewind_words_redirs_list(t_cmd *cmd_head)
 		cmd_head = cmd_head->next;
 	}
 }
-

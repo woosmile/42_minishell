@@ -74,6 +74,7 @@ expansion.c \
 expansion_env_arr.c \
 expansion_list_init.c \
 expansion_list_utils.c \
+expansion_str.c \
 builtin.c
 MANDATORY_OBJS = $(MANDATORY_SRCS:.c=.o)
 
