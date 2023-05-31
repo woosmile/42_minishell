@@ -6,7 +6,7 @@
 /*   By: woosekim <woosekim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 21:14:51 by woosekim          #+#    #+#             */
-/*   Updated: 2023/05/30 16:40:43 by woosekim         ###   ########.fr       */
+/*   Updated: 2023/05/31 21:10:24 by woosekim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,5 +83,6 @@ t_exp	*exp_list(t_token *temp, t_exp *exp_head, \
 		}
 		w_idx++;
 	}
+	check_div_null_node(exp_head);
 	return (exp_head);
 }

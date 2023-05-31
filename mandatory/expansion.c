@@ -6,7 +6,7 @@
 /*   By: woosekim <woosekim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 02:02:12 by woosekim          #+#    #+#             */
-/*   Updated: 2023/05/30 23:39:24 by woosekim         ###   ########.fr       */
+/*   Updated: 2023/05/31 16:31:32 by woosekim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,7 @@ void	expansion(t_token *token_head, t_env *env_head)
 			exp_head = exp_head->next;
 		}
 		*/
-		token_head = expansion_str(token_head, token_head->str, \
+		token_head = expansion_str(token_head, ft_strdup(token_head->str), \
 									exp_head, word_rec);
 		free_double_ptr(exp_bundle);
 		free(word_rec);

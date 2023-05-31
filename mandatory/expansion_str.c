@@ -6,7 +6,7 @@
 /*   By: woosekim <woosekim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 14:33:24 by woosekim          #+#    #+#             */
-/*   Updated: 2023/05/31 01:22:15 by woosekim         ###   ########.fr       */
+/*   Updated: 2023/05/31 21:27:48 by woosekim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,12 +163,19 @@ int	new_str_len(char *word_rec, t_exp *exp_head, size_t *idx)
 	return (new_len);
 }*/
 
+// t_token	*expansion_create_token(t_token *temp, t_exp **exp_head, char *str_temp)
 t_token	*expansion_create_token(t_token *temp, t_exp **exp_head)
 {
 	t_token	*node;
 	
-	while ((*exp_head)->str != NULL && (*exp_head) != NULL)
+	while ((*exp_head && (*exp_head)->str != NULL))
+	// while ((*exp_head && (*exp_head)->str != NULL) || (*exp_head)->div == 1)
+			// (*exp_head)->div == 1 || ((*exp_head)->str == NULL && (*exp_head)->next)))
 	{
+		// if ((*exp_head)->str == NULL)
+		// 	node = new_token_node(WORD, str_temp, temp);
+		// else
+		// 	node = new_token_node(WORD, (*exp_head)->str, temp);
 		node = new_token_node(WORD, (*exp_head)->str, temp);
 		if (temp->next)
 		{
@@ -182,16 +189,17 @@ t_token	*expansion_create_token(t_token *temp, t_exp **exp_head)
 	return (temp);
 }
 
-char	*front_str_combine(char *str_temp, int s_idx, char *str_comb, t_exp *exp_head)
+char	*front_str_combine(char *str_temp, int s_idx, char *str_comb, t_exp **exp_head)
 {
 	char	*str_new;
 	char	*old_str;
 
 	str_new = ft_substr(str_temp, 0, s_idx);
-	if (exp_head->str != NULL)
+	if (((*exp_head)->str != NULL && (*exp_head)->div == 0) || ft_strncmp(str_new, "", 2) == 0)
 	{
 		old_str = str_new;
-		str_new = ft_strjoin(str_new, exp_head->str);
+		str_new = ft_strjoin(str_new, (*exp_head)->str);
+		(*exp_head) = (*exp_head)->next;
 		free(old_str);
 	}
 	if (!str_comb)
@@ -234,28 +242,51 @@ char	*idx_init(char *word_rec, int *w_idx, char *str_temp, int *s_idx)
 	(*w_idx)++;
 	while (word_rec[*w_idx] == 0)
 		(*w_idx)++;
-	if (word_rec[*w_idx] != -1)
-		str_temp = str_temp + *w_idx;
+	str_temp = str_temp + *w_idx;
 	*s_idx = 0;
 	return (str_temp);
 }
 
-t_token *check_expansion_list(t_token *temp, t_exp **exp_head, char **str_comb)
+t_token *check_expansion_list(t_token *temp, char *str_temp, t_exp **exp_head, char **str_comb)
 {
-	(*exp_head) = (*exp_head)->next;
+	char	*old_str;
+	char	*free_str;
+	
 	if ((*exp_head)->str == NULL)
 		(*exp_head) = (*exp_head)->next;
 	else
 	{
-		free(temp->str);
+		free_str = temp->str;
 		temp->str = ft_strdup(*str_comb);
 		if (!temp->str)
 			exit(1);
 		free(*str_comb);
+		*str_comb = NULL;
+		// temp = expansion_create_token(temp, exp_head, str_temp);
 		temp = expansion_create_token(temp, exp_head);
-		*str_comb = temp->str;
+		// if ((*exp_head)->div == 0)
+		// {
+		// 	old_str = temp->str;
+		// 	temp->str = ft_strjoin(temp->str, str_temp);
+		// 	free(old_str);
+		// 	free(free_str);
+		// 	(*exp_head) = (*exp_head)->next;
+		// }
+		old_str = temp->str;
+		temp->str = ft_strjoin(temp->str, str_temp);
+		free(old_str);
+		free(free_str);
+		(*exp_head) = (*exp_head)->next;
 	}
 	return (temp);
+}
+
+void	word_rec_recreate(t_token *temp, char **str_temp, char **word_rec, int *w_idx)
+{
+	*w_idx = 0;
+	free(*word_rec);
+	*str_temp = temp->str;
+	*word_rec = word_type_recorder(temp, 0, 0);
 }
 
 t_token	*expansion_str(t_token *temp, char *str_temp, t_exp *exp_head, char *word_rec)
@@ -271,9 +302,11 @@ t_token	*expansion_str(t_token *temp, char *str_temp, t_exp *exp_head, char *wor
 	{
 		if (word_rec[w_idx] == '$')
 		{
-			str_comb = front_str_combine(str_temp, s_idx, str_comb, exp_head);
-			temp = check_expansion_list(temp, &exp_head, &str_comb);
+			str_comb = front_str_combine(str_temp, s_idx, str_comb, &exp_head);
 			str_temp = idx_init(word_rec, &w_idx, temp->str, &s_idx);
+			temp = check_expansion_list(temp, str_temp, &exp_head, &str_comb);
+			if (!str_comb)
+				word_rec_recreate(temp, &str_temp, &word_rec, &w_idx);
 		}
 		else
 		{
@@ -282,7 +315,6 @@ t_token	*expansion_str(t_token *temp, char *str_temp, t_exp *exp_head, char *wor
 		}
 	}
 	rear_str_combine(temp, str_temp, s_idx, str_comb);
-	
 	return (temp);
 }
 /*

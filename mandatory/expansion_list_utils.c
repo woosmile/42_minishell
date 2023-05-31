@@ -6,7 +6,7 @@
 /*   By: woosekim <woosekim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 21:17:14 by woosekim          #+#    #+#             */
-/*   Updated: 2023/05/30 16:29:20 by woosekim         ###   ########.fr       */
+/*   Updated: 2023/05/31 21:19:20 by woosekim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,5 +87,23 @@ void	free_exp_list(t_exp *exp_head)
 		temp = exp_head->next;
 		free(exp_head);
 		exp_head = temp;
+	}
+}
+
+void	check_div_null_node(t_exp *exp_head)
+{
+	int	div;
+
+	div = 0;
+	while (exp_head)
+	{
+		if (exp_head->str == NULL && div == 1)
+		{
+			exp_head->div = 1;
+			div = 0;
+		}
+		else
+			div = exp_head->div;
+		exp_head = exp_head->next;
 	}
 }
