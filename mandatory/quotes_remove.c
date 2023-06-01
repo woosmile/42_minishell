@@ -1,29 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstclear_bonus.c                                :+:      :+:    :+:   */
+/*   quotes_remove.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: joonhlee <joonhlee@student.42.fr>          +#+  +:+       +#+        */
+/*   By: woosekim <woosekim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/17 19:34:32 by joonhlee          #+#    #+#             */
-/*   Updated: 2023/06/01 20:30:26 by joonhlee         ###   ########.fr       */
+/*   Created: 2023/05/29 13:30:56 by woosekim          #+#    #+#             */
+/*   Updated: 2023/05/29 13:40:11 by woosekim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "minishell.h"
 
-void	ft_lstclear(t_list **lst, void (*del)(void *))
+void	quotes_remove(t_token *token_head)
 {
-	t_list	*tmp_next;
-
-	if (lst == 0 || *lst == 0 || del == 0)
-	{
-		return ;
-	}
-	while (*lst)
-	{
-		tmp_next = (*lst)->next;
-		ft_lstdelone(*lst, del);
-		*lst = tmp_next;
-	}
+	
 }
