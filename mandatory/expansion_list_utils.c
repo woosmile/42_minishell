@@ -6,7 +6,7 @@
 /*   By: woosekim <woosekim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 21:17:14 by woosekim          #+#    #+#             */
-/*   Updated: 2023/05/31 21:19:20 by woosekim         ###   ########.fr       */
+/*   Updated: 2023/06/01 14:49:43 by woosekim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,17 +77,29 @@ void	exp_list_add_split(t_exp **exp_head, t_exp *new, \
 
 void	free_exp_list(t_exp *exp_head)
 {
-	t_exp	*temp;
+	t_exp	*exp_iter;
+	t_exp	*exp_to_clear;
 
-	temp = exp_head;
-	while (temp != NULL)
+	exp_iter = exp_head;
+	while (exp_iter)
 	{
-		if (temp->str)
-			free(temp->str);
-		temp = exp_head->next;
-		free(exp_head);
-		exp_head = temp;
+		exp_to_clear = exp_iter;
+		if (exp_to_clear->str != NULL)
+			free(exp_to_clear->str);
+		free(exp_to_clear);
+		exp_iter = exp_iter->next;
 	}
+	// t_exp	*temp;
+
+	// temp = exp_head;
+	// while (temp != NULL)
+	// {
+	// 	if (temp->str)
+	// 		free(temp->str);
+	// 	temp = exp_head->next;
+	// 	free(exp_head);
+	// 	exp_head = temp;
+	// }
 }
 
 void	check_div_null_node(t_exp *exp_head)

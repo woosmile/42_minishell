@@ -6,7 +6,7 @@
 /*   By: woosekim <woosekim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 14:33:24 by woosekim          #+#    #+#             */
-/*   Updated: 2023/05/31 21:27:48 by woosekim         ###   ########.fr       */
+/*   Updated: 2023/06/01 14:59:16 by woosekim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -168,7 +168,8 @@ t_token	*expansion_create_token(t_token *temp, t_exp **exp_head)
 {
 	t_token	*node;
 	
-	while ((*exp_head && (*exp_head)->str != NULL))
+	while ((*exp_head != NULL && (*exp_head)->str != NULL) || \
+			((*exp_head)->str == NULL && (*exp_head)->div == 1 && (*exp_head)->next != NULL))
 	// while ((*exp_head && (*exp_head)->str != NULL) || (*exp_head)->div == 1)
 			// (*exp_head)->div == 1 || ((*exp_head)->str == NULL && (*exp_head)->next)))
 	{
@@ -176,15 +177,22 @@ t_token	*expansion_create_token(t_token *temp, t_exp **exp_head)
 		// 	node = new_token_node(WORD, str_temp, temp);
 		// else
 		// 	node = new_token_node(WORD, (*exp_head)->str, temp);
-		node = new_token_node(WORD, (*exp_head)->str, temp);
+		if ((*exp_head)->str == NULL)
+			node = new_token_node(WORD, "", temp);
+		else
+			node = new_token_node(WORD, (*exp_head)->str, temp);
+		//node = new_token_node(WORD, (*exp_head)->str, temp);
 		if (temp->next)
 		{
 			node->next = temp->next;
 			temp->next->prev = node;
 		}
 		temp->next = node;
-		temp = temp->next;	
-		(*exp_head) = (*exp_head)->next;
+		temp = temp->next;
+		if ((*exp_head)->str == NULL)
+			(*exp_head)->div = 0;
+		else
+			(*exp_head) = (*exp_head)->next;
 	}
 	return (temp);
 }
