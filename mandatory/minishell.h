@@ -127,7 +127,7 @@ void			rewind_words_redirs_list(t_cmd *cmd_head);
 
 void			expansion(t_token *token_head, t_env *env_head);
 char			*env_get_value(t_env *env_head, char *name);   //builtin.c
-char			**env_arr(t_env *env_head, t_token *temp, char *word_rec);
+char			**env_arr(char *str, t_env *env_head, char *word_rec);
 t_exp			*exp_list(t_token *temp, t_exp *exp_head, \
 							char *word_rec, char **exp_bundle);
 t_exp			*new_exp_node(char *str);
@@ -135,8 +135,9 @@ void			exp_list_add_back(t_exp **exp_head, t_exp *new);
 void			exp_list_add_split(t_exp **exp_head, t_exp *new, \
 									char **exp_split, char *exp_bundle);
 void			free_exp_list(t_exp *exp_head);
-char			*word_type_recorder(t_token *temp, size_t str_len, size_t i);
+char			*word_type_recorder(char *str, size_t str_len, size_t i);
 t_token			*expansion_str(t_token *temp, char *str_temp, t_exp *exp_head, char *word_rec);
 void			check_div_null_node(t_exp *exp_head);
+char 			*exp_str_to_str(char *str, t_env *env_head);
 
 #endif

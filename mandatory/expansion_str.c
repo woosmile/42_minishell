@@ -6,7 +6,7 @@
 /*   By: woosekim <woosekim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 14:33:24 by woosekim          #+#    #+#             */
-/*   Updated: 2023/06/01 14:59:16 by woosekim         ###   ########.fr       */
+/*   Updated: 2023/06/01 18:04:38 by woosekim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,6 +179,7 @@ t_token	*expansion_create_token(t_token *temp, t_exp **exp_head)
 		// 	node = new_token_node(WORD, (*exp_head)->str, temp);
 		if ((*exp_head)->str == NULL)
 			node = new_token_node(WORD, "", temp);
+		else if ((*exp_head)->)
 		else
 			node = new_token_node(WORD, (*exp_head)->str, temp);
 		//node = new_token_node(WORD, (*exp_head)->str, temp);

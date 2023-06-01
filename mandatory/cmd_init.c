@@ -147,6 +147,10 @@ t_cmd	*cmd_list_init(char *str, t_cmd *cmd_head, t_env *env_head)
 	if (token_head)
 	{
 		token_head = token_list_combine(token_head, token_head);
+		char	*test;
+		test = exp_str_to_str(token_head->str, env_head);
+		printf("%s\n", test);
+		/*
 		expansion(token_head, env_head);
 		while (token_head)
 		{
@@ -155,6 +159,7 @@ t_cmd	*cmd_list_init(char *str, t_cmd *cmd_head, t_env *env_head)
 			printf("\nNEXT TOKEN\n\n");
 			token_head = token_head->next;
 		}
+		*/
 		// cmd_head = words_redirs_init(NULL, NULL, token_head, token_head);
 	}
 	return (cmd_head);

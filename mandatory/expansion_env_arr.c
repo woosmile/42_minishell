@@ -14,15 +14,14 @@
 
 extern int	g_exit_status;
 
-void	env_name_input(t_token *temp, char *env_name, \
-						int name_len, size_t *w_idx)
+void	env_name_input(char *str, char *env_name, int name_len, size_t *w_idx)
 {
 	int	n_idx;
 
 	n_idx = 0;
 	while (n_idx < name_len)
 	{
-		env_name[n_idx] = temp->str[*w_idx];
+		env_name[n_idx] = str[*w_idx];
 		n_idx++;
 		(*w_idx)++;
 	}
@@ -50,8 +49,7 @@ int	env_name_len(char *word_rec, size_t *w_idx)
 	return (name_len);
 }
 
-void	env_name(t_token *temp, char *word_rec, \
-				char **exp_bundle)
+void	env_name(char *str, char *word_rec, char **exp_bundle)
 {
 	int		name_len;
 	size_t	w_idx;
@@ -69,7 +67,7 @@ void	env_name(t_token *temp, char *word_rec, \
 			if (split_null_guard(exp_bundle, b_idx))
 				exit(1);
 			w_idx = w_idx - name_len;
-			env_name_input(temp, exp_bundle[b_idx], name_len, &w_idx);
+			env_name_input(str, exp_bundle[b_idx], name_len, &w_idx);
 			b_idx++;
 		}
 		else
@@ -107,7 +105,7 @@ void	env_value(t_env *env_head, char **exp_bundle, \
 	}
 }
 
-char	**env_arr(t_env *env_head, t_token *temp, char *word_rec)
+char	**env_arr(char *str, t_env *env_head, char *word_rec)
 {
 	char	**exp_bundle;
 	int		exp_arr_cnt;
@@ -127,7 +125,7 @@ char	**env_arr(t_env *env_head, t_token *temp, char *word_rec)
 	if (!exp_bundle)
 		exit(1);
 	exp_bundle[exp_arr_cnt] = NULL;
-	env_name(temp, word_rec, exp_bundle);
+	env_name(str, word_rec, exp_bundle);
 	env_value(env_head, exp_bundle, exp_arr_cnt, 0);
 	return (exp_bundle);
 }

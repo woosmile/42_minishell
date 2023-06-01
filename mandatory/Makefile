@@ -70,11 +70,9 @@ str_split.c \
 str_split_utils.c \
 cmd_init.c \
 cmd_init_utils.c \
-expansion.c \
 expansion_env_arr.c \
-expansion_list_init.c \
-expansion_list_utils.c \
-expansion_str.c \
+expansion2.c \
+expansion.c \
 builtin.c
 MANDATORY_OBJS = $(MANDATORY_SRCS:.c=.o)
 
