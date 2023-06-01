@@ -6,7 +6,7 @@
 /*   By: joonhlee <joonhlee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/15 16:35:13 by woosekim          #+#    #+#             */
-/*   Updated: 2023/06/01 20:47:22 by joonhlee         ###   ########.fr       */
+/*   Updated: 2023/06/01 21:20:48 by joonhlee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,12 @@ int g_exit_status;
 
 int error_handling(int select);
 
+t_token *exp_connect(t_token *token, t_token *sublst_head);
+t_token_type *check_ingredient2(char **split, t_token_type type);
+int find_n_split(char **split);
+
+t_token *tokenize_str(char *str_w_value, t_token *token);
+
 t_env *env_list_init(char **envp, t_env *env_head,
 					 t_env *temp, t_env *new);
 char **env_conv_arr(t_env *env_head);
@@ -159,7 +165,7 @@ void merge_redir(t_token **token_head);
 t_token_type convert_type(char *str);
 
 t_cmd *parser(t_token *token_head, t_env *env_head);
-t_cmd *new_cmd_node(void);
+t_cmd *new_cmd_node2(void);
 
 t_here *repeat_heredocs(t_cmd *cmd_head);
 t_here *do_a_heredoc(char *limiter);
@@ -184,7 +190,7 @@ void clear_this_line(t_cmd *cmd_head, t_here *here_head);
 int perror_return(char *str, int exit_code);
 
 // char **env_conv_arr(t_env *env_head);
-void list_free(t_env *head);
+// void list_free(t_env *head);
 void arr2d_free(char **arr);
 
 int is_builtin(char *cmd);

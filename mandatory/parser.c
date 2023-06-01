@@ -6,7 +6,7 @@
 /*   By: joonhlee <joonhlee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 09:22:28 by joonhlee          #+#    #+#             */
-/*   Updated: 2023/05/22 11:54:39 by joonhlee         ###   ########.fr       */
+/*   Updated: 2023/06/01 21:20:23 by joonhlee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,14 +20,14 @@ t_cmd	*parser(t_token *token_head, t_env *env_head)
 	t_env	*env_iter;
 
 	env_iter = env_head;
-	cmd_head = new_cmd_node();
+	cmd_head = new_cmd_node2();
 	token_iter = token_head;
 	cmd_iter = cmd_head;
 	while (token_iter)
 	{
 		if (token_iter->type == PIPE)
 		{
-			cmd_iter->next = new_cmd_node();
+			cmd_iter->next = new_cmd_node2();
 			cmd_iter->next->prev = cmd_iter;
 			cmd_iter = cmd_iter->next;
 			token_head = token_iter;
@@ -77,7 +77,7 @@ t_cmd	*parser(t_token *token_head, t_env *env_head)
 	return (cmd_head);
 }
 
-t_cmd	*new_cmd_node(void)
+t_cmd	*new_cmd_node2(void)
 {
 	t_cmd	*node;
 

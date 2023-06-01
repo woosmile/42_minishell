@@ -6,7 +6,7 @@
 /*   By: joonhlee <joonhlee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/05 16:34:03 by joonhlee          #+#    #+#             */
-/*   Updated: 2023/06/01 20:40:51 by joonhlee         ###   ########.fr       */
+/*   Updated: 2023/06/01 21:11:50 by joonhlee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,32 +15,17 @@
 int	main(int argc, char **argv, char **envp)
 {
 	t_env				*env_head;
-	// struct sigaction	act;
 	char				*line;
 
-	// argv[1] = NULL if argc == 0 why?
 	if (argc != 1 || argv[1] != 0)
 		return (126);
-	// ft_bzero(&act, sizeof(act));
-	// act.__sigaction_u.__sa_handler = &sig_handle;
-	// sigaction(SIGINT, &act, NULL);
 	signal_setup();
 	env_head = env_list_init(envp, NULL, NULL, NULL);
 	while (1)
 	{
 		line = readline("minishell> ");
-		// printf("main 32:%d|%s\n", g_exit_status, line);
-
 		if (line == 0)
 			ctrl_d_handler(env_head, line);
-		// {
-		// 	ft_putstr_fd("\033[1A", STDOUT_FILENO);
-		// 	ft_putstr_fd("\033[11C", STDOUT_FILENO);
-		// 	ft_putstr_fd("exit", STDOUT_FILENO);
-		// 	list_free(env_head);
-		// 	free(line);
-		// 	exit (1);
-		// }
 		if (line && *line)
 			add_history(line);
 		shell_op(line, &env_head);
@@ -78,7 +63,7 @@ void	ctrl_d_handler(t_env *env_head, char *line)
 	ft_putstr_fd("\033[1A", STDOUT_FILENO);
 	ft_putstr_fd("\033[11C", STDOUT_FILENO);
 	ft_putstr_fd("exit", STDOUT_FILENO);
-	list_free(env_head);
+	env_list_free(env_head);
 	free(line);
 	exit(0);
 }

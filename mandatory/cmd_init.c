@@ -144,23 +144,19 @@ t_cmd	*cmd_list_init(char *str, t_cmd *cmd_head, t_env *env_head)
 	token_head = token_list_init(split, type, NULL, NULL);
 	free_double_ptr(split);
 	free(type);
-	if (token_head)
-	{
-		token_head = token_list_combine(token_head, token_head);
-		char	*test;
-		test = exp_str_to_str(token_head->str, env_head);
-		printf("%s\n", test);
-		/*
-		expansion(token_head, env_head);
-		while (token_head)
-		{
-			printf("type : %d\n", token_head->type);
-			printf("str : %s\n", token_head->str);
-			printf("\nNEXT TOKEN\n\n");
-			token_head = token_head->next;
-		}
-		*/
-		// cmd_head = words_redirs_init(NULL, NULL, token_head, token_head);
-	}
+	if (token_head == NULL)
+		return (NULL);
+	token_head = token_list_combine(token_head, token_head);
+
+
+	// test_print_tokens(token_head);
+	expansion(token_head, env_head);
+	g_exit_status = 0;
+	// test_print_tokens(token_head);
+	unquote(token_head);
+
+	// test_print_cmds(cmd_head);
+	cmd_head = parser(token_head, env_head);
+	// cmd_head = words_redirs_init(NULL, NULL, token_head, token_head);
 	return (cmd_head);
 }

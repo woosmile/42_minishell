@@ -1,99 +1,81 @@
 NAME = minishell
+#NAME = ../minishell
+
+CC = cc
+CFLAGS = -Werror -Wall -Wextra -g
+LDFLAGS = 	-L./libft -lft \
+			-L./readline/lib -lreadline \
+			-L./readline/lib -lhistory
 
 MAKE = make
 MFLAGS = -C
 
-LIBFT_SRCS = \
-libft/ft_atoi.c \
-libft/ft_bzero.c \
-libft/ft_calloc.c \
-libft/ft_isalnum.c \
-libft/ft_isalpha.c \
-libft/ft_isascii.c \
-libft/ft_isdigit.c \
-libft/ft_isprint.c \
-libft/ft_itoa.c \
-libft/ft_memchr.c \
-libft/ft_memcmp.c \
-libft/ft_memcpy.c \
-libft/ft_memmove.c \
-libft/ft_memset.c \
-libft/ft_putchar_fd.c \
-libft/ft_putendl_fd.c \
-libft/ft_putnbr_fd.c \
-libft/ft_putstr_fd.c \
-libft/ft_split.c \
-libft/ft_strchr.c \
-libft/ft_strdup.c \
-libft/ft_striteri.c \
-libft/ft_strjoin.c \
-libft/ft_strlcat.c \
-libft/ft_strlcpy.c \
-libft/ft_strlen.c \
-libft/ft_strmapi.c \
-libft/ft_strnstr.c \
-libft/ft_strrchr.c \
-libft/ft_strtrim.c \
-libft/ft_substr.c \
-libft/ft_tolower.c \
-libft/ft_toupper.c \
-libft/ft_strncmp.c \
-libft/ft_lstadd_back_bonus.c \
-libft/ft_lstadd_front_bonus.c \
-libft/ft_lstclear_bonus.c \
-libft/ft_lstdelone_bonus.c \
-libft/ft_lstiter_bonus.c \
-libft/ft_lstlast_bonus.c \
-libft/ft_lstmap_bonus.c \
-libft/ft_lstnew_bonus.c \
-libft/ft_lstsize_bonus.c
+RM = rm
+RMFLAGS = -rf
 
-MANDATORY_DIR = mandatory
+LIBFT_DIR = ./libft/
+LIBFT_LIB = $(LIBFT_DIR)libft.a
+
+READLINE_DIR = ./readline/
+READLINE_LIB = $(READLINE_DIR)lib/libreadline.a $(READLINE_DIR)lib/libhistory.a
+
+HEADER = \
+./mandatory/minishell.h \
+$(LIBFT_DIR)libft.h \
+./readline/include/readline/readline.h \
+./readline/include/readline/history.h
+
+INCLUDES = -I./mandatory -I./readline/include/readline -I./libft
+
 MANDATORY_SRCS = \
-mandatory/minishell.c
+mandatory/builtin.c \
+mandatory/cmd_init_utils.c \
+mandatory/cmd_init.c \
+mandatory/env_conv_arr.c \
+mandatory/env_init.c \
+mandatory/expansion_env_arr.c \
+mandatory/expansion_list_init.c \
+mandatory/expansion_list_utils.c \
+mandatory/expansion.c \
+mandatory/expansion2.c \
+mandatory/find_cmd_path.c \
+mandatory/heredoc.c \
+mandatory/minishell_utils.c \
+mandatory/minishell.c \
+mandatory/shell_op.c \
+mandatory/str_split_utils.c \
+mandatory/str_split.c \
+mandatory/token_init_utils.c \
+mandatory/token_init.c \
+mandatory/parser.c \
+mandatory/unquote.c
+
 MANDATORY_OBJS = $(MANDATORY_SRCS:.c=.o)
 
-#BONUS_DIR = bonus
-#BONUS_SRCS = 
-#BONUS_OBJS = $(BONUS_SRCS:.c=.o)
-
-ifdef WITH_BONUS
-	FINAL_DIR = $(BONUS_DIR)
-else
-	FINAL_DIR = $(MANDATORY_DIR)
-endif
-
-ifdef WITH_BONUS
-	FINAL_SRCS = $(BONUS_SRCS)
-else
-	FINAL_SRCS = $(MANDATORY_SRCS)
-endif
-
-ifdef WITH_BONUS
-	FINAL_OBJS = $(BONUS_OBJS)
-else
-	FINAL_OBJS = $(MANDATORY_OBJS)
-endif
-
 all : $(NAME)
-bonus : 
-	make WITH_BONUS=1 all
 
-$(NAME) : $(FINAL_OBJS) $(FINAL_SRCS) $(LIBFT_SRCS)
+$(NAME) : $(LIBFT_LIB) $(READLINE_LIB) $(MANDATORY_OBJS) $(HEADER)
+	$(CC) $(CFLAGS) -o $@ $(MANDATORY_OBJS) $(LDFLAGS)
 
-$(FINAL_OBJS) : $(FINAL_SRCS)
-	$(MAKE) $(MFLAGS) $(FINAL_DIR) all
+$(LIBFT_LIB) :
+	$(MAKE) $(MFLAGS) $(LIBFT_DIR) bonus
+
+$(READLINE_LIB) :
+	$(MAKE) $(MFLAGS) $(READLINE_DIR) all
+
+%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@ $(INCLUDES)
 
 clean :
-	$(MAKE) $(MFLAGS) $(MANDATORY_DIR) clean
-#	$(MAKE) $(MFLAGS) $(BONUS_DIR) clean
-
+	$(MAKE) $(MFLAGS) $(LIBFT_DIR) clean
+	$(MAKE) $(MFLAGS) $(READLINE_DIR) clean
+	$(RM) $(RMFLAGS) $(MANDATORY_OBJS)
 
 fclean : clean
-	$(MAKE) $(MFLAGS) $(MANDATORY_DIR) fclean
-#	$(MAKE) $(MFLAGS) $(BONUS_DIR) fclean
+	$(MAKE) $(MFLAGS) $(LIBFT_DIR) fclean
+	$(MAKE) $(MFLAGS) $(READLINE_DIR) fclean
 	$(RM) $(RMFLAGS) $(NAME)
 
 re : fclean all
 
-.PHONY : all bonus clean fclean re
+.PHONY : all clean fclean re

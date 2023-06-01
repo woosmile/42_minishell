@@ -6,7 +6,7 @@
 /*   By: joonhlee <joonhlee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 08:08:57 by joonhlee          #+#    #+#             */
-/*   Updated: 2023/06/01 08:46:56 by joonhlee         ###   ########.fr       */
+/*   Updated: 2023/06/01 21:13:14 by joonhlee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,19 +84,4 @@ char	*check_cmd_path(char *cmd, char **dirs)
 	if (cmd_path == NULL)
 		exit (EXIT_FAILURE);
 	return (cmd_path);
-}
-
-void	free_double_ptr(char **ptr)
-{
-	int	i;
-
-	if (ptr == NULL)
-		return ;
-	i = 0;
-	while (ptr[i])
-	{
-		free(ptr[i]);
-		i++;
-	}
-	free (ptr);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expansion2.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: woosekim <woosekim@student.42.fr>          +#+  +:+       +#+        */
+/*   By: joonhlee <joonhlee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/01 16:12:27 by joonhlee          #+#    #+#             */
-/*   Updated: 2023/06/01 19:53:34 by woosekim         ###   ########.fr       */
+/*   Updated: 2023/06/01 21:50:09 by joonhlee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,9 +117,7 @@ char *exp_str_to_str(char *str, t_env *env_head)
 }
 
 //token->prev > sublst > token->next token value is replaced by sublst_head
-t_token *exp_connect(t_token *token, t_token *sublst_head);
-t_token_type *check_ingredient2(char **split, t_token_type type);
-int		find_n_split(char **split);
+
 
 void	expansion(t_token *token_head, t_env *env_head)
 {
@@ -128,6 +126,8 @@ void	expansion(t_token *token_head, t_env *env_head)
 	t_token	*sublst_head;
 
 	token_iter = token_head;
+		// printf("expansion2:131 before\n");
+		// test_print_tokens(token_iter);
 	while (token_iter)
 	{
 		if (token_iter->type == HEREDOC | token_iter->type == PIPE)
@@ -138,6 +138,9 @@ void	expansion(t_token *token_head, t_env *env_head)
 			sublst_head = tokenize_str(str_with_value, token_iter);
 			token_iter = exp_connect(token_iter, sublst_head);
 		}
+		// printf("expansion2:141 after\n");
+		// test_print_tokens(token_iter);
+		// test_print_tokens(token_head);
 	}
 }
 
@@ -152,7 +155,7 @@ t_token	*tokenize_str(char *str_w_value, t_token *token)
 	if (!split)
 		exit (1);
 	n_split = find_n_split(split);
-	if (n_split > 2 && (token->type == INFILE || token->type == OUTFILE
+	if (n_split > 1 && (token->type == INFILE || token->type == OUTFILE
 			|| token->type == APPEND))
 	{
 		token_new_head = new_token_node(AERROR, token->str, NULL);
@@ -166,7 +169,8 @@ t_token	*tokenize_str(char *str_w_value, t_token *token)
 	}
 	token_new_head = token_list_init(split, type_arr, NULL, NULL);
 	free_double_ptr(split);
-	free(type);
+	free(type_arr);
+	return (token_new_head);
 }
 
 t_token_type	*check_ingredient2(char **split, t_token_type type)
@@ -176,13 +180,13 @@ t_token_type	*check_ingredient2(char **split, t_token_type type)
 	t_token_type	*result;
 
 	len = find_n_split(split);
-	result = (t_token_type *)malloc((len + 1) * sizeof (t_token_type));
+	result = (t_token_type *)malloc((len) * sizeof (t_token_type));
 	if (result == NULL)
 		exit (1);
 	i = 0;
 	while (i < len)
 		result[i++] = type;
-	result[i] = NULL;
+	return (result);
 }
 
 int	find_n_split(char **split)
@@ -208,9 +212,11 @@ t_token	*exp_connect(t_token *token, t_token *sublst_head)
 	token->type = sublst_head->type;
 	token->str = sublst_head->str;
 	next = token->next;
-	token->next = sublst_head->next;
 	if (sublst_head->next != NULL)
+	{
+		token->next = sublst_head->next;
 		sublst_head->next->prev = token;
+	}
 	sublst_tail->next = next;
 	if (next != NULL)
 		next->prev = sublst_tail;

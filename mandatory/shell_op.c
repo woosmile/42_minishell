@@ -6,7 +6,7 @@
 /*   By: joonhlee <joonhlee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/19 08:37:24 by joonhlee          #+#    #+#             */
-/*   Updated: 2023/06/01 14:19:38 by joonhlee         ###   ########.fr       */
+/*   Updated: 2023/06/01 22:03:08 by joonhlee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,23 +14,24 @@
 
 int	shell_op(char *line, t_env **env_head)
 {
-	t_token	*token_head;
+	// t_token	*token_head;
 	t_cmd	*cmd_head;
 	t_here	*here_head;
 	int		exit_code;
 
 	// divide line into tokens
-	token_head = token_list_init(line, NULL, NULL, NULL);
-	if (token_head == NULL)
-		return (1);
+	// token_head = token_list_init(line, NULL, NULL, NULL);
+	// if (token_head == NULL)
+	// 	return (1);
 	// test_print_tokens(token_head);
 	// create command nodes and rearrange token nodes into sublist of words and redirs
-	cmd_head = parser(token_head, *env_head);
-	if (cmd_head == NULL)
-		return (1);
-	g_exit_status = 0;
+	cmd_head = cmd_list_init(line, NULL, *env_head);
+	// if (cmd_head == NULL || g_exit_status != 0)
+	// 	return (1);
+	// g_exit_status = 0;
 	// execute here_docs and replace them into input redirection with heredocs
 	// also save here_doc filename as list to unlink in the future as return value
+	// if (g_exit_status == 0)
 	here_head = NULL;
 	if (g_exit_status == 0)
 		here_head = repeat_heredocs(cmd_head);
@@ -124,7 +125,7 @@ int	only_builtin_child(t_cmd *cmd, t_env **env_head)
 			close(std_fd[1]);
 			ft_putstr_fd("minishell: ", STDERR_FILENO);
 			ft_putstr_fd(token_iter->str, STDERR_FILENO);
-			return (perror_return("ambiguous redirect", 1));
+			return (perror_return(" : ambiguous redirect", 1));
 		}
 		if (token_iter->type == INFILE)
 			fd = open(token_iter->str, O_RDONLY);
@@ -183,7 +184,7 @@ int	child(t_cmd *cmd, t_env **env_head)
 		{
 			ft_putstr_fd("minishell: ", STDERR_FILENO);
 			ft_putstr_fd(token_iter->str, STDERR_FILENO);
-			exit (perror_return("ambiguous redirect", 1));
+			exit (perror_return(" : ambiguous redirect", 1));
 		}
 		else if (token_iter->type == INFILE)
 			fd = open(token_iter->str, O_RDONLY);
