@@ -32,7 +32,7 @@ int	env_name_len(char *word_rec, size_t *w_idx)
 
 	name_len = 0;
 	if (word_rec[*w_idx] == '?')
-	{	
+	{
 		name_len = 1;
 		(*w_idx)++;
 	}

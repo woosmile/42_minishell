@@ -6,7 +6,7 @@
 /*   By: woosekim <woosekim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/23 21:10:43 by joonhlee          #+#    #+#             */
-/*   Updated: 2023/06/02 17:43:08 by woosekim         ###   ########.fr       */
+/*   Updated: 2023/06/02 19:47:49 by woosekim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -293,7 +293,7 @@ int	ft_exit(t_cmd *cmd, int exit_code)
 	if (ft_strcmp(cmd->argv[1], a) != 0)
 	{
 		ft_putstr_fd("exit\n", STDERR_FILENO);
-		ft_putstr_fd("bash: exit: ", STDERR_FILENO);
+		ft_putstr_fd("minishell: exit: ", STDERR_FILENO);
 		ft_putstr_fd(cmd->argv[1], STDERR_FILENO);
 		ft_putstr_fd(": numeric argument required\n", STDERR_FILENO);
 		free(a);
@@ -305,7 +305,7 @@ int	ft_exit(t_cmd *cmd, int exit_code)
 		if (cmd->argv[2] != NULL)
 		{
 			ft_putstr_fd("exit\n", STDERR_FILENO);
-			ft_putstr_fd("bash: exit: too many arguments\n", STDERR_FILENO);
+			ft_putstr_fd("minishell: exit: too many arguments\n", STDERR_FILENO);
 			return (1);
 		}
 		else
