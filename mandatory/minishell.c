@@ -6,22 +6,18 @@
 /*   By: woosekim <woosekim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/05 16:34:03 by joonhlee          #+#    #+#             */
-/*   Updated: 2023/06/02 19:48:08 by woosekim         ###   ########.fr       */
+/*   Updated: 2023/06/02 19:52:04 by woosekim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// void	check_leak(void)
-// {
-// 	system("leaks minishell");
-// }
-
 int	main(int argc, char **argv, char **envp)
 {
-	t_env				*env_head;
-	char				*line;
-
+	t_env	*env_head;
+	char	*line;
+	t_cmd	*cmd_head;
+	t_here	*here_head;
 
 	if (argc != 1 || argv[1] != 0)
 		return (126);
@@ -34,165 +30,36 @@ int	main(int argc, char **argv, char **envp)
 			ctrl_d_handler(env_head, line);
 		if (line && *line)
 			add_history(line);
-		shell_op(line, &env_head);
-		free(line);
-		system("leaks --list minishell");
+		cmd_head = cmd_list_init(line, NULL, env_head);
+		here_head = NULL;
+		if (g_exit_status == 0)
+			here_head = repeat_heredocs(cmd_head, env_head);
+		if (g_exit_status == 0)
+			g_exit_status = exec_cmds(cmd_head, &env_head);
+		clear_this_line(cmd_head, here_head, line);
 	}
-
 	return (0);
 }
 
-void	signal_setup(void)
+void	clear_this_line(t_cmd *cmd_head, t_here *here_head, char *line)
 {
-	t_termios	term;
-
-	tcgetattr(STDIN_FILENO, &term);
-	term.c_lflag &= ~ECHOCTL;
-	tcsetattr(STDIN_FILENO, TCSANOW, &term);
-	signal(SIGINT, ctrl_c_handler);
-	signal(SIGQUIT, SIG_IGN);
-}
-
-void	ctrl_c_handler(int signum)
-{
-	if (signum == SIGINT)
-	{
-		g_exit_status = 1;
-		ft_putstr_fd("\n", 1);
-		rl_on_new_line();
-		rl_replace_line("", 1);
-		rl_redisplay();
-	}
-	else
-		return ;
-}
-
-void	ctrl_d_handler(t_env *env_head, char *line)
-{
-	ft_putstr_fd("\033[1A", STDOUT_FILENO);
-	ft_putstr_fd("\033[11C", STDOUT_FILENO);
-	ft_putstr_fd("exit", STDOUT_FILENO);
-	env_list_free(env_head);
-	free(line);
-	exit(0);
-}
-
-void	here_signal_setup(void)
-{
-	// t_termios	term;
-	// // struct sigaction act;
-
-	// tcgetattr(STDIN_FILENO, &term);
-	// term.c_lflag &= ~ECHOCTL;
-	// tcsetattr(STDIN_FILENO, TCSANOW, &term);
-	// ft_bzero(&act, sizeof(act));
-	// act.__sigaction_u.__sa_handler = &here_ctrl_c_handler;
-	// sigaction(SIGINT, &act, NULL);
-	signal(SIGINT, here_ctrl_c_handler);
-	signal(SIGQUIT, SIG_IGN);
-}
-
-void	here_ctrl_c_handler(int signum)
-{
-	// int	std_fd;
-	// int	pfd[2];
-	// int	check;
-
-	if (signum != SIGINT)
-		return ;
-	// std_fd = dup(STDIN_FILENO);
-	// if (std_fd == -1)
-	// {
-	// 	perror("minishell:");
-	// 	return ;
-	// }
-	// check = pipe(pfd);
-	// if (check == -1)
-	// {
-	// 	close(std_fd);
-	// 	perror("minishell");
-	// 	return ;
-	// }
-	// dup2(pfd[0], STDIN_FILENO);
-	// close(pfd[0]);
-	// rl_done = 1;
-	// printf("here handler 127\n");
-	if (g_exit_status == 0)
-	{
-		ft_putstr_fd("\n(press enter)", STDOUT_FILENO);
-		// rl_on_new_line();
-		rl_replace_line("", 1);
-	}
-	else
-	{
-		ft_putstr_fd("(press enter)", STDOUT_FILENO);
-		rl_replace_line("", 1);
-	}
-
-	g_exit_status = -1;
-	// close(STDIN_FILENO);
-	// dup2(std_fd, STDIN_FILENO);
-	// close(std_fd);
-	// rl_replace_line("", 1);
-	// rl_redisplay();
-	// ft_putstr_fd("\033[K", STDOUT_FILENO);
-	// ft_putchar_fd('\n', pfd[1]);
-	// ft_putchar_fd('\0', pfd[1]);
-	// close(pfd[1]);
-	// dup2(std_fd, STDIN_FILENO);
-	// close(std_fd);
-}
-
-void	test_print_env(t_env *env_head)
-{
-	t_env	*env_iter;
-
-	env_iter = env_head;
-	while (env_iter)
-	{
-		printf("env|key=%s|value=%s\n", env_iter->name, env_iter->value);
-		env_iter = env_iter->next;
-	}
-}
-
-void	test_print_tokens(t_token *token_head)
-{
-	t_token	*token_iter;
-
-	token_iter = token_head;
-	while (token_iter)
-	{
-		printf("token_type=%d|token_value=%s|prev=%p|current=%p|next=%p\n",
-			token_iter->type, token_iter->str,
-			token_iter->prev, token_iter, token_iter->next);
-		token_iter = token_iter->next;
-	}
-}
-
-void test_print_cmds(t_cmd *cmd_head)
-{
-	t_cmd *cmd_iter;
-	t_token	*token_iter;
+	t_cmd		*cmd_iter;
+	t_cmd		*cmd_to_clear;
 
 	cmd_iter = cmd_head;
 	while (cmd_iter)
 	{
-		token_iter = cmd_iter->words;
-		while (token_iter)
-		{
-			printf("token_type=%d|token_value=%s|prev=%p|current=%p|next=%p\n",
-				token_iter->type, token_iter->str,
-				token_iter->prev, token_iter, token_iter->next);
-			token_iter = token_iter->next;
-		}
-		token_iter = cmd_iter->redirs;
-		while (token_iter)
-		{
-			printf("token_type=%d|token_value=%s|prev=%p|current=%p|next=%p\n",
-				token_iter->type, token_iter->str,
-				token_iter->prev, token_iter, token_iter->next);
-			token_iter = token_iter->next;
-		}
+		cmd_to_clear = cmd_iter;
 		cmd_iter = cmd_iter->next;
+		token_list_free(cmd_to_clear->words);
+		token_list_free(cmd_to_clear->redirs);
+		if (cmd_to_clear->cmd_path != NULL)
+			free(cmd_to_clear->cmd_path);
+		if (cmd_to_clear->argv != NULL)
+			free(cmd_to_clear->argv);
+		free(cmd_to_clear);
 	}
+	clear_here_n_return(here_head);
+	free(line);
+	line = 0;
 }

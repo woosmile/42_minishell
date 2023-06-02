@@ -29,6 +29,10 @@ INCLUDES = -I./mandatory -I./readline/include/readline -I./libft
 
 MANDATORY_SRCS = \
 mandatory/builtin.c \
+mandatory/builtin2.c \
+mandatory/builtin3.c \
+mandatory/builtin4.c \
+mandatory/builtin5.c \
 mandatory/cmd_init_utils.c \
 mandatory/cmd_init.c \
 mandatory/env_conv_arr.c \
@@ -38,15 +42,19 @@ mandatory/expansion_str_combine.c \
 mandatory/expansion_utils.c \
 mandatory/expansion.c \
 mandatory/find_cmd_path.c \
-mandatory/heredoc.c \
 mandatory/minishell_utils.c \
 mandatory/minishell.c \
 mandatory/shell_op.c \
+mandatory/shell_op2.c \
+mandatory/shell_op3.c \
+mandatory/heredoc.c \
+mandatory/heredoc2.c \
 mandatory/str_split_utils.c \
 mandatory/str_split.c \
 mandatory/token_init_utils.c \
 mandatory/token_init.c \
 mandatory/parser.c \
+mandatory/signal.c \
 mandatory/unquote.c
 
 MANDATORY_OBJS = $(MANDATORY_SRCS:.c=.o)

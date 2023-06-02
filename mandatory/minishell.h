@@ -6,7 +6,7 @@
 /*   By: woosekim <woosekim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/15 16:35:13 by woosekim          #+#    #+#             */
-/*   Updated: 2023/06/02 19:39:10 by woosekim         ###   ########.fr       */
+/*   Updated: 2023/06/02 19:53:30 by woosekim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -187,9 +187,26 @@ void ctrl_c_handler(int signum);
 void ctrl_d_handler(t_env *env_head, char *line);
 void here_signal_setup(void);
 void here_ctrl_c_handler(int signum);
-int shell_op(char *line, t_env **env_head);
+void clear_this_line(t_cmd *cmd_head, t_here *here_head, char *line);
 
-// t_token *token_list_init(char *str, t_token *token_head, t_token *temp, t_token *new);
+int exec_cmds(t_cmd *cmd_head, t_env **env_head);
+int manage_pipe(t_cmd *cmd);
+int only_builtin_child(t_cmd *cmd, t_env **env_head);
+int obc_init(t_cmd *cmd, int *std_fd);
+int obc_redirs(t_token *token_iter, int *std_fd);
+int obc_aerror(t_token *token_iter, int *std_fd);
+int child(t_cmd *cmd, t_env **env_head);
+void child_init(t_cmd *cmd);
+void child_redirs(t_cmd *cmd);
+int child_redirs_open(t_token *token_iter);
+char **words_lst_to_arr(t_cmd *cmd);
+char *find_cmd_path(char *cmd, char **envp);
+char **find_path_env(char **envp);
+char *check_cmd_path(char *cmd, char **dirs);
+int parent(int pid, t_cmd *cmd_head);
+int parent_close_pfd(t_cmd *cmd_head);
+int perror_return(char *str, int exit_code);
+
 void merge_redir(t_token **token_head);
 t_token_type convert_type(char *str);
 
@@ -197,6 +214,7 @@ t_cmd *parser(t_token *token_head, t_env *env_head);
 t_cmd *new_cmd_node2(void);
 
 t_here *repeat_heredocs(t_cmd *cmd_head, t_env *env_head);
+t_here *here_iter(t_cmd *cmd_head, t_env *env_head);
 t_here *do_a_heredoc(char *limiter, t_env *env_head);
 char *nexist_name(void);
 void write_heredoc(int fd, char *limiter, t_env *env_head);
@@ -205,18 +223,6 @@ t_here *clear_here_n_return(t_here *here_head);
 void here_add_bottom(t_here **here_head, t_here *here_doc);
 void update_redirs(t_token *redirs, t_here *here_doc);
 
-int exec_cmds(t_cmd *cmd_head, t_env **env_head);
-int manage_pipe(t_cmd *cmd);
-int only_builtin_child(t_cmd *cmd, t_env **env_head);
-int child(t_cmd *cmd, t_env **env_head);
-char **words_lst_to_arr(t_cmd *cmd);
-char *find_cmd_path(char *cmd, char **envp);
-char **find_path_env(char **envp);
-char *check_cmd_path(char *cmd, char **dirs);
-// void free_double_ptr(char **ptr);
-int parent(int pid, t_cmd *cmd_head);
-void clear_this_line(t_cmd *cmd_head, t_here *here_head);
-int perror_return(char *str, int exit_code);
 
 // char **env_conv_arr(t_env *env_head);
 // void list_free(t_env *head);
@@ -226,16 +232,26 @@ int is_builtin(char *cmd);
 int run_builtin(t_cmd *cmd, t_env **env_head);
 int run_only_builtin(t_cmd *cmd, t_env **env_head);
 int ft_echo(char **argv);
+void echo_check(char **argv, int *i, int *j, int *n);
 int ft_cd(t_cmd *cmd, t_env *env_head);
+char *get_dest_path(t_cmd *cmd, t_env *env_head);
+char *put_str_return(char *str, int fd);
+int perror_free_return(char *first, char *second, int code);
 int ft_pwd(void);
 int ft_export(t_cmd *cmd, t_env *env_head);
+int export_no_arg(t_env *env_head);
+int export_syntax_error(char *name);
 int ft_unset(t_cmd *cmd, t_env **env_head);
 int ft_env(t_env *env_head);
 int ft_exit(t_cmd *cmd, int exit_code);
+void exit_numeric_error(char *arg, char *a);
+int exit_too_many_error(char *arg, char *a, int n);
 int is_valid_name(char *str);
-int env_set_value(t_env *env_head, char *name, char *value);
+int	env_set_value(t_env *env_head, char *name, char *value);
+char *env_set_new_value(char *value);
 char *env_get_value(t_env *env_head, char *name);
 int env_remove(t_env **env_head, char *name);
+t_env *env_find_env_to_remove(t_env **env_head, char *name);
 
 void test_print_env(t_env *env_head);
 void test_print_tokens(t_token *token_head);
