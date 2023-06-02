@@ -6,7 +6,7 @@
 /*   By: joonhlee <joonhlee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/15 16:35:13 by woosekim          #+#    #+#             */
-/*   Updated: 2023/06/01 21:20:48 by joonhlee         ###   ########.fr       */
+/*   Updated: 2023/06/02 11:29:06 by joonhlee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -167,10 +167,10 @@ t_token_type convert_type(char *str);
 t_cmd *parser(t_token *token_head, t_env *env_head);
 t_cmd *new_cmd_node2(void);
 
-t_here *repeat_heredocs(t_cmd *cmd_head);
-t_here *do_a_heredoc(char *limiter);
+t_here *repeat_heredocs(t_cmd *cmd_head, t_env *env_head);
+t_here *do_a_heredoc(char *limiter, t_env *env_head);
 char *nexist_name(void);
-void write_heredoc(int fd, char *limiter);
+void write_heredoc(int fd, char *limiter, t_env *env_head);
 t_here *free_n_return(char *str, int exit_code);
 t_here *clear_here_n_return(t_here *here_head);
 void here_add_bottom(t_here **here_head, t_here *here_doc);

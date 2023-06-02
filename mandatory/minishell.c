@@ -6,7 +6,7 @@
 /*   By: joonhlee <joonhlee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/05 16:34:03 by joonhlee          #+#    #+#             */
-/*   Updated: 2023/06/02 10:12:17 by joonhlee         ###   ########.fr       */
+/*   Updated: 2023/06/02 10:58:42 by joonhlee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,6 +113,11 @@ void	here_ctrl_c_handler(int signum)
 	{
 		ft_putstr_fd("\n(press enter)", STDOUT_FILENO);
 		// rl_on_new_line();
+		rl_replace_line("", 1);
+	}
+	else
+	{
+		ft_putstr_fd("(press enter)", STDOUT_FILENO);
 		rl_replace_line("", 1);
 	}
 

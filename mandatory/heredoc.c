@@ -6,13 +6,13 @@
 /*   By: joonhlee <joonhlee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 13:32:16 by joonhlee          #+#    #+#             */
-/*   Updated: 2023/06/01 08:47:22 by joonhlee         ###   ########.fr       */
+/*   Updated: 2023/06/02 11:29:52 by joonhlee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_here	*repeat_heredocs(t_cmd *cmd_head)
+t_here	*repeat_heredocs(t_cmd *cmd_head, t_env *env_head)
 {
 	t_cmd	*cmd_iter;
 	t_token	*redirs_iter;
@@ -29,7 +29,7 @@ t_here	*repeat_heredocs(t_cmd *cmd_head)
 		{
 			if (redirs_iter->type == HEREDOC)
 			{
-				here_node = do_a_heredoc(redirs_iter->str);
+				here_node = do_a_heredoc(redirs_iter->str, env_head);
 				// printf("herenode:%s\n", here_node->filename);
 				if (here_node == NULL)
 					return (clear_here_n_return(here_head));
@@ -46,7 +46,7 @@ t_here	*repeat_heredocs(t_cmd *cmd_head)
 	return (here_head);
 }
 
-t_here	*do_a_heredoc(char *limiter)
+t_here	*do_a_heredoc(char *limiter, t_env *env_head)
 {
 	int		fd;
 	char	*here_filename;
@@ -61,7 +61,7 @@ t_here	*do_a_heredoc(char *limiter)
 	fd = open(here_filename, O_WRONLY | O_TRUNC | O_CREAT, 0644);
 	if (fd == -1)
 		return (free_n_return(here_filename, 1));
-	write_heredoc(fd, limiter);
+	write_heredoc(fd, limiter, env_head);
 	close(fd);
 	heredoc_node = (t_here *) malloc (sizeof (t_here));
 	if (heredoc_node == NULL)
@@ -97,9 +97,10 @@ char	*nexist_name(void)
 	return (NULL);
 }
 
-void	write_heredoc(int fd, char *limiter)
+void	write_heredoc(int fd, char *limiter, t_env *env_head)
 {
 	char	*line;
+	char	*expanded_line;
 	// char	*limiter_nl;
 
 	while (1 && g_exit_status > -1)
@@ -115,7 +116,9 @@ void	write_heredoc(int fd, char *limiter)
 			free(line);
 			break ;
 		}
-		ft_putendl_fd(line, fd);
+		expanded_line = exp_str_to_str(line, env_head);
+		ft_putendl_fd(expanded_line, fd);
+		free(expanded_line);
 		free(line);
 	}
 	// limiter_nl = ft_strjoin(limiter, "\n");

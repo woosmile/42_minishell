@@ -6,7 +6,7 @@
 /*   By: joonhlee <joonhlee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/01 16:12:27 by joonhlee          #+#    #+#             */
-/*   Updated: 2023/06/02 10:44:47 by joonhlee         ###   ########.fr       */
+/*   Updated: 2023/06/02 11:22:29 by joonhlee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,13 +135,15 @@ void	expansion(t_token *token_head, t_env *env_head)
 		else
 		{
 			str_with_value = exp_str_to_str(token_iter->str, env_head);
-			printf("expansion2:138:str_w_value:|%s|\n", str_with_value);
+			// printf("expansion2:138:str_w_value:|%s|\n", str_with_value);
 			sublst_head = tokenize_str(str_with_value, token_iter);
+			// printf("expansion2:140:\n");
+			// test_print_tokens(sublst_head);
+
 			token_iter = exp_connect(token_iter, sublst_head);
 		}
 		// printf("expansion2:141 after\n");
 		// test_print_tokens(token_iter);
-		// test_print_tokens(token_head);
 	}
 }
 
@@ -215,6 +217,7 @@ t_token	*exp_connect(t_token *token, t_token *sublst_head)
 	{
 		free(token->str);
 		token->str = sublst_head->str;
+		token->type = sublst_head->type;
 		free(sublst_head);
 		return (token->next);
 	}
@@ -225,9 +228,8 @@ t_token	*exp_connect(t_token *token, t_token *sublst_head)
 	free(token->str);
 	token->str = sublst_head->str;
 	next = token->next;
-	token->next = sublst_head->next;
+		token->next = sublst_head->next;
 	sublst_head->next->prev = token;
-	free(sublst_head->str);
 	free(sublst_head);
 	sublst_tail->next = next;
 	if (next != NULL)

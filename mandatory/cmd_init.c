@@ -157,12 +157,12 @@ t_cmd	*cmd_list_init(char *str, t_cmd *cmd_head, t_env *env_head)
 	if (token_head == NULL)
 		return (NULL);
 	token_head = token_list_combine(token_head, token_head);
-	printf("cmd_init:160\n");
-	test_print_tokens(token_head);
+	// printf("cmd_init:160\n");
+	// test_print_tokens(token_head);
 	expansion(token_head, env_head);
 	g_exit_status = 0;
-	printf("cmd_init:164\n");
-	test_print_tokens(token_head);
+	// printf("cmd_init:164\n");
+	// test_print_tokens(token_head);
 	unquote(token_head);
 	// test_print_cmds(cmd_head);
 	cmd_head = parser(token_head, env_head);

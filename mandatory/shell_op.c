@@ -6,7 +6,7 @@
 /*   By: joonhlee <joonhlee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/19 08:37:24 by joonhlee          #+#    #+#             */
-/*   Updated: 2023/06/02 10:11:12 by joonhlee         ###   ########.fr       */
+/*   Updated: 2023/06/02 11:30:23 by joonhlee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int	shell_op(char *line, t_env **env_head)
 	// if (g_exit_status == 0)
 	here_head = NULL;
 	if (g_exit_status == 0)
-		here_head = repeat_heredocs(cmd_head);
+		here_head = repeat_heredocs(cmd_head, *env_head);
 	exit_code = 0;
 	if (g_exit_status == 0)
 		exit_code = exec_cmds(cmd_head, env_head);
@@ -127,7 +127,8 @@ int	only_builtin_child(t_cmd *cmd, t_env **env_head)
 			close(std_fd[1]);
 			ft_putstr_fd("minishell: ", STDERR_FILENO);
 			ft_putstr_fd(token_iter->str, STDERR_FILENO);
-			return (perror_return(" : ambiguous redirect", 1));
+			ft_putstr_fd(" : ambiguous redirect\n", STDERR_FILENO);
+			return (1);
 		}
 		if (token_iter->type == INFILE)
 			fd = open(token_iter->str, O_RDONLY);
@@ -186,7 +187,8 @@ int	child(t_cmd *cmd, t_env **env_head)
 		{
 			ft_putstr_fd("minishell: ", STDERR_FILENO);
 			ft_putstr_fd(token_iter->str, STDERR_FILENO);
-			exit (perror_return(" : ambiguous redirect", 1));
+			ft_putstr_fd(" : ambiguous redirect\n", STDERR_FILENO);
+			exit (1);
 		}
 		else if (token_iter->type == INFILE)
 			fd = open(token_iter->str, O_RDONLY);
