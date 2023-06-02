@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: joonhlee <joonhlee@student.42.fr>          +#+  +:+       +#+        */
+/*   By: woosekim <woosekim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/15 16:35:13 by woosekim          #+#    #+#             */
-/*   Updated: 2023/06/02 11:29:06 by joonhlee         ###   ########.fr       */
+/*   Updated: 2023/06/02 19:39:10 by woosekim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,66 +92,95 @@ typedef struct s_exp
 // int	exit_status;
 int g_exit_status;
 
-int error_handling(int select);
+//parse part
+int				error_handling(int select);
 
-t_token *exp_connect(t_token *token, t_token *sublst_head);
-t_token_type *check_ingredient2(char **split, t_token_type type);
-int find_n_split(char **split);
+void			free_double_ptr(char **ptr);
+void			env_list_free(t_env *head);
+void			cmd_list_free(t_cmd	*cmd_head);
+void			token_list_free(t_token *token_head);
 
-t_token *tokenize_str(char *str_w_value, t_token *token);
+t_env			*env_list_init(char **envp, t_env *env_head, \
+								t_env *temp, t_env *new);
+t_env			*new_env_node(char *name, char *value, t_env *prev);
+void			split_name_value(char *envp, char **name, char **value);
+char			*env_find_name(char *envp);
+char			*env_find_value(char *envp);
 
-t_env *env_list_init(char **envp, t_env *env_head,
-					 t_env *temp, t_env *new);
-char **env_conv_arr(t_env *env_head);
+char			**env_conv_arr(t_env *env_head);
+int				env_list_len(t_env *env_head);
+void			input_name_content(t_env *env_head, char *env_arr, int size);
 
-void env_list_free(t_env *head);
-void free_double_ptr(char **ptr);
-void token_list_free(t_token *token_head);
-void cmd_list_free(t_cmd *cmd_head);
+char			**split_str(char *s, size_t str_cnt, \
+							size_t s_len, int exp_flag);
+size_t			string_count(char const *s, char *word_rec, int exp_flag);
+int				word_count(char **str_arr, size_t str_cnt, char *word_rec);
+void			word_input(char const *s, char **str_arr, \
+							size_t str_cnt, char *word_rec);
+int				blank_masking(char *s, size_t s_len, char *word_rec);
+int				check_sep(char c, char *charset);
+void			check_metacharacter(const char *s, int *i, \
+									size_t *cnt, char *word_rec);
+void			check_exp_metacharacter(const char *s, int *i, \
+										size_t *cnt, char *word_rec);
+int				split_null_guard(char **str_arr, int i);
 
-char **split_str(char *s, size_t str_cnt, size_t s_len,
-				 char **str_arr);
-int split_null_guard(char **str_arr, int i);
-int blank_masking(char *s, size_t s_len, char *word_rec);
-int check_sep(char const s, char *charset);
-void check_quotes(char s, t_quotes *q);
-void check_metacharacter(const char *s, int *i,
-						 size_t *cnt, char *word_rec);
-// int split_null_guard(char **str_arr, int i);
+t_token			*token_list_init(char **split, t_token_type *type, \
+								t_token *token_head, t_token *new);
+t_token_type	*check_ingredient(char **split);
+t_token			*new_token_node(t_token_type type, char *split, t_token *prev);
+int				syntax_check(t_token *token_head, t_token_type type, \
+							int redir_flag, int pipe_flag);
+int				syntax_error(t_token *token_head, int redir_flag, \
+							int pipe_flag, int mode);
+t_token_type	check_redir_type(t_token_type type, t_token *token_head);
+t_token			*token_list_combine(t_token *token_head, t_token *temp);
+void			token_list_renew(t_token **token_head, t_token **temp, \
+								t_token *temp_prev);
 
-t_token *token_list_init(char **split, t_token_type *type,
-						 t_token *temp, t_token *new);
-t_token *new_token_node(t_token_type type, char *split, t_token *prev);
-int syntax_check(t_token *token_head, t_token_type type,
-				 int redir_flag, int pipe_flag);
-t_token *token_list_combine(t_token *token_head, t_token *temp);
-void token_list_renew(t_token **token_head, t_token **temp,
-					  t_token *prev_temp);
+t_cmd			*cmd_list_init(char *str, t_cmd *cmd_head, t_env *env_head);
+t_cmd			*new_cmd_node(t_cmd *prev);
+t_cmd			*cmd_list_create(t_token *token_head, t_env *env_head);
+void			cmd_word_list(t_cmd *cmd_temp, t_token *words, \
+								t_token **token_head, t_token **token_temp);
+void			cmd_redir_list(t_cmd *cmd_temp, t_token *redirs, \
+								t_token **token_head, t_token **token_temp);
+void			rewind_words_redirs_list(t_cmd *cmd_head);
 
-t_cmd *cmd_list_init(char *str, t_cmd *cmd_head, t_env *env_head);
-t_cmd *new_cmd_node(t_cmd *prev);
-void rewind_words_redirs_list(t_cmd *cmd_head);
+void			expansion(t_token *token_head, t_env *env_head);
 
-void expansion(t_token *token_head, t_env *env_head);
-// char *env_get_value(t_env *env_head, char *name); // builtin.c
-char **env_arr(char *str, t_env *env_head, char *word_rec);
-t_exp *exp_list(t_token *temp, t_exp *exp_head,
-				char *word_rec, char **exp_bundle);
-t_exp *new_exp_node(char *str);
-void exp_list_add_back(t_exp **exp_head, t_exp *new);
-void exp_list_add_split(t_exp **exp_head, t_exp *new,
-						char **exp_split, char *exp_bundle);
-void free_exp_list(t_exp *exp_head);
-char *word_type_recorder(char *str, size_t str_len, size_t i);
-t_token *expansion_str(t_token *temp, char *str_temp, t_exp *exp_head, char *word_rec);
-void check_div_null_node(t_exp *exp_head);
-char *exp_str_to_str(char *str, t_env *env_head);
+char			*exp_str_to_str(char *str, t_env *env_head);
+void			word_type_recording(char *str, char *word_rec, \
+									size_t i, int exp_flag);
+char			*word_type_recorder(char *str, size_t str_len, size_t i);
+char			*exp_str_combine(char *str, char **exp_bundle, \
+									char *word_rec, char *str_comb);
+void			front_str_combine(char *str, int s_idx, char *exp_bundle, \
+									char **str_comb);
+char			*rear_str_combine(char *str, int s_idx, char *str_comb);
+char			*idx_init(char *word_rec, int *w_idx, char *str, int *s_idx);
 
-t_env	*new_env_node(char *name, char *value, t_env *prev);
-void	split_name_value(char *envp, char **name, char **value);
-char *env_find_name(char *envp);
-char *env_find_value(char *envp);
-// t_env	*env_list_init(char **envp, t_env *env_head, t_env *temp, t_env *new);
+char			**env_arr(char *str, t_env *env_head, char *word_rec);
+void			env_name(char *str, char *word_rec, char **exp_bundle);
+int				env_name_len(char *word_rec, size_t *w_idx);
+void			env_name_input(char *str, char *env_name, \
+								int name_len, size_t *w_idx);
+void			env_value(t_env *env_head, char **exp_bundle, \
+							int exp_arr_cnt, int b_idx);
+
+t_token			*tokenize_str(char *str_w_value, t_token *token);
+int				find_n_split(char **split);
+t_token_type	*check_ingredient_exp_arr(char **split, t_token_type type);
+
+t_token			*exp_connect(t_token *token, t_token *sublst_head);
+t_token			*exp_head_tail_connect(t_token *token, t_token *sublst_head);
+
+int				unquote(t_token *token_head);
+char			*unquote_a_str(char *str);
+int				find_n_of_quotes(char *str);
+int				check_quotes(char s, t_quotes *q);
+
+
 
 void signal_setup(void);
 void ctrl_c_handler(int signum);
@@ -191,7 +220,7 @@ int perror_return(char *str, int exit_code);
 
 // char **env_conv_arr(t_env *env_head);
 // void list_free(t_env *head);
-void arr2d_free(char **arr);
+// void arr2d_free(char **arr);
 
 int is_builtin(char *cmd);
 int run_builtin(t_cmd *cmd, t_env **env_head);
@@ -207,11 +236,6 @@ int is_valid_name(char *str);
 int env_set_value(t_env *env_head, char *name, char *value);
 char *env_get_value(t_env *env_head, char *name);
 int env_remove(t_env **env_head, char *name);
-
-int unquote(t_token *token_head);
-char *unquote_a_str(char *str);
-int find_n_of_quotes(char *str);
-int check_quotes2(char s, t_quotes *q);
 
 void test_print_env(t_env *env_head);
 void test_print_tokens(t_token *token_head);

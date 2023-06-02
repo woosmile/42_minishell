@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_init.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: joonhlee <joonhlee@student.42.fr>          +#+  +:+       +#+        */
+/*   By: woosekim <woosekim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/15 17:12:35 by woosekim          #+#    #+#             */
-/*   Updated: 2023/06/01 20:37:44 by joonhlee         ###   ########.fr       */
+/*   Updated: 2023/06/02 17:15:13 by woosekim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,11 @@ void	split_name_value(char *envp, char **name, char **value)
 	*value = ft_strchr(envp, '=');
 	len = *value - envp;
 	*value = ft_strdup(*value + 1);
+	if (!*value)
+		exit (EXIT_FAILURE);
 	*name = (char *)malloc(sizeof(char) * (len + 1));
+	if (!*name)
+		exit (EXIT_FAILURE);
 	while (x < len)
 	{
 		name[0][x] = envp[x];

@@ -10,11 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-
-//may need check joonhlee branch to solve compile error
 #include "minishell.h"
-
-extern int	g_exit_status;
 
 void	free_double_ptr(char **ptr)
 {

@@ -34,10 +34,9 @@ mandatory/cmd_init.c \
 mandatory/env_conv_arr.c \
 mandatory/env_init.c \
 mandatory/expansion_env_arr.c \
-mandatory/expansion_list_init.c \
-mandatory/expansion_list_utils.c \
+mandatory/expansion_str_combine.c \
+mandatory/expansion_utils.c \
 mandatory/expansion.c \
-mandatory/expansion2.c \
 mandatory/find_cmd_path.c \
 mandatory/heredoc.c \
 mandatory/minishell_utils.c \

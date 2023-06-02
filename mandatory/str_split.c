@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-static size_t	string_count(char const *s, char *word_rec)
+size_t	string_count(char const *s, char *word_rec, int exp_flag)
 {
 	int			i;
 	size_t		cnt;
@@ -25,13 +25,18 @@ static size_t	string_count(char const *s, char *word_rec)
 	{
 		check_quotes(s[i], &q);
 		if (!q.detect)
-			check_metacharacter(s + i, &i, &cnt, word_rec);
+		{
+			if (exp_flag == 0)
+				check_metacharacter(s + i, &i, &cnt, word_rec);
+			else
+				check_exp_metacharacter(s + i, &i, &cnt, word_rec);
+		}
 		i++;
 	}
 	return (cnt);
 }
 
-static int	word_count(char **str_arr, size_t str_cnt, char *word_rec)
+int	word_count(char **str_arr, size_t str_cnt, char *word_rec)
 {
 	size_t		arr_i;
 	size_t		rec_i;
@@ -58,8 +63,8 @@ static int	word_count(char **str_arr, size_t str_cnt, char *word_rec)
 	return (1);
 }
 
-static void	word_input(char const *s, char **str_arr, \
-						size_t str_cnt, char *word_rec)
+void	word_input(char const *s, char **str_arr, \
+					size_t str_cnt, char *word_rec)
 {
 	size_t	arr_i;
 	size_t	arr_j;
@@ -87,9 +92,10 @@ static void	word_input(char const *s, char **str_arr, \
 	}
 }
 
-char	**split_str(char *s, size_t str_cnt, size_t s_len, char **str_arr)
+char	**split_str(char *s, size_t str_cnt, size_t s_len, int exp_flag)
 {
 	char	*word_rec;
+	char	**str_arr;
 
 	s_len = ft_strlen(s);
 	word_rec = (char *)ft_calloc(s_len, sizeof(char));
@@ -100,7 +106,7 @@ char	**split_str(char *s, size_t str_cnt, size_t s_len, char **str_arr)
 		free(word_rec);
 		return (NULL);
 	}
-	str_cnt = string_count(s, word_rec);
+	str_cnt = string_count(s, word_rec, exp_flag);
 	str_arr = (char **)malloc((str_cnt + 1) * sizeof(char *));
 	if (!str_arr)
 		return (NULL);

@@ -12,8 +12,6 @@
 
 #include "minishell.h"
 
-extern int	g_exit_status;
-
 void	env_name_input(char *str, char *env_name, int name_len, size_t *w_idx)
 {
 	int	n_idx;
@@ -94,12 +92,6 @@ void	env_value(t_env *env_head, char **exp_bundle, \
 			temp_value = env_get_value(env_head, exp_bundle[b_idx]);
 			free(exp_bundle[b_idx]);
 			exp_bundle[b_idx] = temp_value;
-			if (temp_value)
-			{
-				exp_bundle[b_idx] = ft_strdup(temp_value);
-				if (split_null_guard(exp_bundle, b_idx))
-					exit(1);
-			}
 		}
 		b_idx++;
 	}

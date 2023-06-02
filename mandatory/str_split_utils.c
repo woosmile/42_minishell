@@ -52,15 +52,17 @@ void	check_metacharacter(const char *s, int *i, size_t *cnt, char *word_rec)
 	}
 }
 
-void	check_quotes(char s, t_quotes *q)
+void	check_exp_metacharacter(const char *s, int *i, \
+								size_t *cnt, char *word_rec)
 {
-	if (q->detect == 0 && (s == '\'' || s == '\"'))
+	char	*charset;
+
+	charset = " ";
+	if (!check_sep(*s, charset) && check_sep(*(s + 1), charset))
 	{
-		q->detect = 1;
-		q->type = s;
+		(*cnt)++;
+		word_rec[*i] = 1;
 	}
-	else if (q->detect == 1 && (s == q->type))
-		q->detect = 0;
 }
 
 int	split_null_guard(char **str_arr, int i)

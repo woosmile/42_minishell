@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   unquote.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: joonhlee <joonhlee@student.42.fr>          +#+  +:+       +#+        */
+/*   By: woosekim <woosekim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/31 16:21:59 by joonhlee          #+#    #+#             */
-/*   Updated: 2023/06/02 10:35:28 by joonhlee         ###   ########.fr       */
+/*   Updated: 2023/06/02 16:29:29 by woosekim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ char	*unquote_a_str(char *str)
 	res_idx = 0;
 	while (str[str_idx])
 	{
-		if (check_quotes2(str[str_idx], &q) == -1)
+		if (check_quotes(str[str_idx], &q) == -1)
 		{
 			result[res_idx] = str[str_idx];
 			res_idx++;
@@ -67,14 +67,14 @@ int	find_n_of_quotes(char *str)
 	i = 0;
 	while (str[i])
 	{
-		if (check_quotes2(str[i], &q) > -1)
+		if (check_quotes(str[i], &q) > -1)
 			sum++;
 		i++;
 	}
 	return (sum);
 }
 
-int	check_quotes2(char s, t_quotes *q)
+int	check_quotes(char s, t_quotes *q)
 {
 	if (q->detect == 0 && (s == '\'' || s == '\"'))
 	{

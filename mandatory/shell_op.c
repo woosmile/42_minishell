@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   shell_op.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: joonhlee <joonhlee@student.42.fr>          +#+  +:+       +#+        */
+/*   By: woosekim <woosekim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/19 08:37:24 by joonhlee          #+#    #+#             */
-/*   Updated: 2023/06/02 11:30:23 by joonhlee         ###   ########.fr       */
+/*   Updated: 2023/06/02 16:20:54 by woosekim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -341,6 +341,7 @@ void	clear_this_line(t_cmd *cmd_head, t_here *here_head)
 			free(cmd_to_clear->cmd_path);
 		if (cmd_to_clear->argv != NULL)
 			free(cmd_to_clear->argv);
+		free(cmd_to_clear);
 	}
 	clear_here_n_return(here_head);
 }

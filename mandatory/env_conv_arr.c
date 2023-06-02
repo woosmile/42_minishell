@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_conv_arr.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: joonhlee <joonhlee@student.42.fr>          +#+  +:+       +#+        */
+/*   By: woosekim <woosekim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/15 19:50:32 by woosekim          #+#    #+#             */
-/*   Updated: 2023/06/01 20:36:41 by joonhlee         ###   ########.fr       */
+/*   Updated: 2023/06/02 17:51:12 by woosekim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,11 @@ void	input_name_content(t_env *env_head, char *env_arr, int size)
 	char	*str_total;
 
 	name_equal = ft_strjoin(env_head->name, "=");
+	if (!name_equal)
+		exit (EXIT_FAILURE);
 	str_total = ft_strjoin(name_equal, env_head->value);
+	if (!str_total)
+		exit (EXIT_FAILURE);
 	i = 0;
 	while (i < size - 1)
 	{
@@ -31,27 +35,37 @@ void	input_name_content(t_env *env_head, char *env_arr, int size)
 	free(str_total);
 }
 
+int	env_list_len(t_env *env_head)
+{
+	int	len;
+
+	len = 0;
+	while (env_head != NULL)
+	{
+		env_head = env_head->next;
+		len++;
+	}
+	return (len);
+}
+
 char	**env_conv_arr(t_env *env_head)
 {
 	int		i;
-	int		size;
+	int		len;
 	char	**env_arr;
-	t_env	*temp;
 
-	size = 0;
-	temp = env_head;
-	while (temp != NULL)
-	{
-		temp = temp->next;
-		size++;
-	}
-	env_arr = (char **)malloc(sizeof(char *) * (size + 1));
+	len = env_list_len(env_head);
+	env_arr = (char **)malloc(sizeof(char *) * (len + 1));
+	if (!env_arr)
+		exit (EXIT_FAILURE);
 	i = 0;
 	while (env_head != NULL)
 	{
-		size = ft_strlen(env_head->name) + ft_strlen(env_head->value) + 2;
-		env_arr[i] = (char *)malloc(sizeof(char) * size);
-		input_name_content(env_head, env_arr[i], size);
+		len = ft_strlen(env_head->name) + ft_strlen(env_head->value) + 2;
+		env_arr[i] = (char *)malloc(sizeof(char) * len);
+		if (!env_arr[i])
+			split_null_guard(env_arr, i);
+		input_name_content(env_head, env_arr[i], len);
 		env_head = env_head->next;
 		i++;
 	}
