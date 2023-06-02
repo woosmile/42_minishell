@@ -6,7 +6,7 @@
 /*   By: joonhlee <joonhlee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/19 08:37:24 by joonhlee          #+#    #+#             */
-/*   Updated: 2023/06/02 18:19:18 by joonhlee         ###   ########.fr       */
+/*   Updated: 2023/06/02 20:16:28 by joonhlee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int	only_builtin_child(t_cmd *cmd, t_env **env_head)
 	close(std_fd[0]);
 	dup2(std_fd[1], STDOUT_FILENO);
 	close(std_fd[1]);
-	return (0);
+	return (g_exit_status);
 }
 
 int	obc_init(t_cmd *cmd, int *std_fd)

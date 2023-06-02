@@ -6,7 +6,7 @@
 /*   By: joonhlee <joonhlee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/19 08:37:24 by joonhlee          #+#    #+#             */
-/*   Updated: 2023/06/02 18:19:52 by joonhlee         ###   ########.fr       */
+/*   Updated: 2023/06/02 20:19:39 by joonhlee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ int	child(t_cmd *cmd, t_env **env_head)
 	char	**envp;
 
 	child_init(cmd);
+	child_redirs(cmd);
 	cmd->argv = words_lst_to_arr(cmd);
 	if (cmd->argv == NULL)
 		exit (perror_return("malloc", 1));
