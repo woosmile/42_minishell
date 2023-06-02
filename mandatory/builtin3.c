@@ -6,7 +6,7 @@
 /*   By: joonhlee <joonhlee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/23 21:10:43 by joonhlee          #+#    #+#             */
-/*   Updated: 2023/06/02 18:24:36 by joonhlee         ###   ########.fr       */
+/*   Updated: 2023/06/02 20:48:16 by joonhlee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ int	export_no_arg(t_env *env_head)
 
 int	export_syntax_error(char *name)
 {
-	ft_putstr_fd("minishell: export: '", STDERR_FILENO);
+	ft_putstr_fd("minishell: export: ", STDERR_FILENO);
 	ft_putstr_fd(name, STDERR_FILENO);
 	ft_putstr_fd(" : not a valid identifier\n", STDERR_FILENO);
 	free(name);

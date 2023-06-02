@@ -52,7 +52,6 @@ mandatory/str_split_utils.c \
 mandatory/str_split.c \
 mandatory/token_init_utils.c \
 mandatory/token_init.c \
-mandatory/parser.c \
 mandatory/signal.c \
 mandatory/unquote.c
 

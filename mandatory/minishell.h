@@ -6,7 +6,7 @@
 /*   By: joonhlee <joonhlee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/15 16:35:13 by woosekim          #+#    #+#             */
-/*   Updated: 2023/06/02 20:35:52 by joonhlee         ###   ########.fr       */
+/*   Updated: 2023/06/02 20:45:05 by joonhlee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ typedef struct s_exp
 	struct s_exp	*next;
 }					t_exp;
 
-int	g_exit_status;
+int						g_exit_status;
 
 int				error_handling(int select);
 
