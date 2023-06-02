@@ -6,7 +6,7 @@
 /*   By: joonhlee <joonhlee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/01 16:12:27 by joonhlee          #+#    #+#             */
-/*   Updated: 2023/06/02 11:22:29 by joonhlee         ###   ########.fr       */
+/*   Updated: 2023/06/02 14:43:12 by joonhlee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,9 +155,11 @@ t_token	*tokenize_str(char *str_w_value, t_token *token)
 	int				n_split;
 
 	split = split_str(str_w_value, 0, 0, NULL);
+	free(str_w_value);
 	if (!split)
 		exit (1);
 	n_split = find_n_split(split);
+	// printf("%d\n", n_split);
 	if (n_split != 1 && (token->type == INFILE || token->type == OUTFILE
 			|| token->type == APPEND))
 	{

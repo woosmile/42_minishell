@@ -6,16 +6,22 @@
 /*   By: joonhlee <joonhlee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/05 16:34:03 by joonhlee          #+#    #+#             */
-/*   Updated: 2023/06/02 10:58:42 by joonhlee         ###   ########.fr       */
+/*   Updated: 2023/06/02 14:35:32 by joonhlee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+// void	check_leak(void)
+// {
+// 	system("leaks minishell");
+// }
+
 int	main(int argc, char **argv, char **envp)
 {
 	t_env				*env_head;
 	char				*line;
+
 
 	if (argc != 1 || argv[1] != 0)
 		return (126);
@@ -30,7 +36,9 @@ int	main(int argc, char **argv, char **envp)
 			add_history(line);
 		shell_op(line, &env_head);
 		free(line);
+		system("leaks --list minishell");
 	}
+
 	return (0);
 }
 
