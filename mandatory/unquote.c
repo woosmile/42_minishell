@@ -6,7 +6,7 @@
 /*   By: joonhlee <joonhlee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/31 16:21:59 by joonhlee          #+#    #+#             */
-/*   Updated: 2023/05/31 17:09:39 by joonhlee         ###   ########.fr       */
+/*   Updated: 2023/06/02 10:35:28 by joonhlee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	unquote(t_token *token_head)
 	char	*unquoted_str;
 
 	token_iter = token_head;
-	while (token_iter)
+	while (token_iter && token_iter->str)
 	{
 		unquoted_str = unquote_a_str(token_iter->str);
 		free(token_iter->str);

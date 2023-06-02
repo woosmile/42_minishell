@@ -6,7 +6,7 @@
 /*   By: joonhlee <joonhlee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/01 16:12:27 by joonhlee          #+#    #+#             */
-/*   Updated: 2023/06/01 21:50:09 by joonhlee         ###   ########.fr       */
+/*   Updated: 2023/06/02 10:44:47 by joonhlee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,6 +135,7 @@ void	expansion(t_token *token_head, t_env *env_head)
 		else
 		{
 			str_with_value = exp_str_to_str(token_iter->str, env_head);
+			printf("expansion2:138:str_w_value:|%s|\n", str_with_value);
 			sublst_head = tokenize_str(str_with_value, token_iter);
 			token_iter = exp_connect(token_iter, sublst_head);
 		}
@@ -155,18 +156,16 @@ t_token	*tokenize_str(char *str_w_value, t_token *token)
 	if (!split)
 		exit (1);
 	n_split = find_n_split(split);
-	if (n_split > 1 && (token->type == INFILE || token->type == OUTFILE
+	if (n_split != 1 && (token->type == INFILE || token->type == OUTFILE
 			|| token->type == APPEND))
 	{
+		free_double_ptr(split);
 		token_new_head = new_token_node(AERROR, token->str, NULL);
 		return (token_new_head);
 	}
+	else if (n_split == 0)
+		return (NULL);
 	type_arr = check_ingredient2(split, token->type);
-	if (!type_arr)
-	{
-		free_double_ptr(split);
-		exit (1);
-	}
 	token_new_head = token_list_init(split, type_arr, NULL, NULL);
 	free_double_ptr(split);
 	free(type_arr);
@@ -206,17 +205,30 @@ t_token	*exp_connect(t_token *token, t_token *sublst_head)
 	t_token	*sublst_tail;
 	t_token	*next;
 
+	if (sublst_head == NULL)
+	{
+		free(token->str);
+		token->str = NULL;
+		return (token->next);
+	}
+	if (sublst_head->next == NULL)
+	{
+		free(token->str);
+		token->str = sublst_head->str;
+		free(sublst_head);
+		return (token->next);
+	}
 	sublst_tail = sublst_head;
 	while (sublst_tail->next)
 		sublst_tail = sublst_tail->next;
 	token->type = sublst_head->type;
+	free(token->str);
 	token->str = sublst_head->str;
 	next = token->next;
-	if (sublst_head->next != NULL)
-	{
-		token->next = sublst_head->next;
-		sublst_head->next->prev = token;
-	}
+	token->next = sublst_head->next;
+	sublst_head->next->prev = token;
+	free(sublst_head->str);
+	free(sublst_head);
 	sublst_tail->next = next;
 	if (next != NULL)
 		next->prev = sublst_tail;

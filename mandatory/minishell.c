@@ -6,7 +6,7 @@
 /*   By: joonhlee <joonhlee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/05 16:34:03 by joonhlee          #+#    #+#             */
-/*   Updated: 2023/06/01 21:11:50 by joonhlee         ###   ########.fr       */
+/*   Updated: 2023/06/02 10:12:17 by joonhlee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ void	ctrl_c_handler(int signum)
 {
 	if (signum == SIGINT)
 	{
+		g_exit_status = 1;
 		ft_putstr_fd("\n", 1);
 		rl_on_new_line();
 		rl_replace_line("", 1);
@@ -108,9 +109,14 @@ void	here_ctrl_c_handler(int signum)
 	// close(pfd[0]);
 	// rl_done = 1;
 	// printf("here handler 127\n");
+	if (g_exit_status == 0)
+	{
+		ft_putstr_fd("\n(press enter)", STDOUT_FILENO);
+		// rl_on_new_line();
+		rl_replace_line("", 1);
+	}
+
 	g_exit_status = -1;
-	ft_putstr_fd("\n(press enter)\n", STDOUT_FILENO);
-	rl_on_new_line();
 	// close(STDIN_FILENO);
 	// dup2(std_fd, STDIN_FILENO);
 	// close(std_fd);

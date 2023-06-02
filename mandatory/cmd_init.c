@@ -133,8 +133,18 @@ t_cmd	*cmd_list_init(char *str, t_cmd *cmd_head, t_env *env_head)
 	t_token_type	*type;
 
 	split = split_str(str, 0, 0, NULL);
-	if (!split)
+	if (split == NULL)
 		return (NULL);
+	// printf("split:|");
+	// int	i = 0;
+	// while (split[i])
+	// 	printf("%s|", split[i]);
+	// printf("done\n");
+	if (split[0] == NULL)
+	{
+		free(split);
+		return (NULL);
+	}
 	type = check_ingredient(split);
 	if (!type)
 	{
@@ -147,14 +157,13 @@ t_cmd	*cmd_list_init(char *str, t_cmd *cmd_head, t_env *env_head)
 	if (token_head == NULL)
 		return (NULL);
 	token_head = token_list_combine(token_head, token_head);
-
-
-	// test_print_tokens(token_head);
+	printf("cmd_init:160\n");
+	test_print_tokens(token_head);
 	expansion(token_head, env_head);
 	g_exit_status = 0;
-	// test_print_tokens(token_head);
+	printf("cmd_init:164\n");
+	test_print_tokens(token_head);
 	unquote(token_head);
-
 	// test_print_cmds(cmd_head);
 	cmd_head = parser(token_head, env_head);
 	// cmd_head = words_redirs_init(NULL, NULL, token_head, token_head);

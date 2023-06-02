@@ -6,7 +6,7 @@
 /*   By: joonhlee <joonhlee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/23 21:10:43 by joonhlee          #+#    #+#             */
-/*   Updated: 2023/06/01 20:35:28 by joonhlee         ###   ########.fr       */
+/*   Updated: 2023/06/02 09:22:54 by joonhlee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -253,7 +253,7 @@ int	ft_unset(t_cmd *cmd, t_env **env_head)
 			env_remove(env_head, cmd->argv[i]);
 		i++;
 	}
-	return (0);
+	return (check);
 }
 
 int	ft_env(t_env *env_head)

@@ -6,7 +6,7 @@
 /*   By: joonhlee <joonhlee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/19 08:37:24 by joonhlee          #+#    #+#             */
-/*   Updated: 2023/06/01 22:03:08 by joonhlee         ###   ########.fr       */
+/*   Updated: 2023/06/02 10:11:12 by joonhlee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@ int	shell_op(char *line, t_env **env_head)
 	// test_print_tokens(token_head);
 	// create command nodes and rearrange token nodes into sublist of words and redirs
 	cmd_head = cmd_list_init(line, NULL, *env_head);
+	// if (cmd_head == NULL)
+	// 	printf("cmd_head = null\n");
 	// if (cmd_head == NULL || g_exit_status != 0)
 	// 	return (1);
 	// g_exit_status = 0;
@@ -208,8 +210,10 @@ int	child(t_cmd *cmd, t_env **env_head)
 		token_iter = token_iter->next;
 	}
 	cmd->argv = words_lst_to_arr(cmd);
-	if (cmd->argv == 0)
+	if (cmd->argv == NULL)
 		exit (perror_return("malloc", 1));
+	if (cmd->argv[0] == NULL)
+		exit (0);
 	if (is_builtin(cmd->argv[0]))
 		return (run_builtin(cmd, env_head));
 	envp = env_conv_arr(*env_head);
