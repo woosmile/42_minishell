@@ -6,7 +6,7 @@
 /*   By: joonhlee <joonhlee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 13:32:16 by joonhlee          #+#    #+#             */
-/*   Updated: 2023/06/02 11:29:52 by joonhlee         ###   ########.fr       */
+/*   Updated: 2023/06/02 18:21:30 by joonhlee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,25 @@
 
 t_here	*repeat_heredocs(t_cmd *cmd_head, t_env *env_head)
 {
+	t_here	*here_head;
+
+	here_signal_setup();
+	here_head = here_iter(cmd_head, env_head);
+	signal_setup();
+	if (g_exit_status < 0)
+		g_exit_status = 1;
+	return (here_head);
+}
+
+t_here	*here_iter(t_cmd *cmd_head, t_env *env_head)
+{
 	t_cmd	*cmd_iter;
 	t_token	*redirs_iter;
 	t_here	*here_head;
 	t_here	*here_node;
 
-	cmd_iter = cmd_head;
 	here_head = NULL;
-	here_signal_setup();
+	cmd_iter = cmd_head;
 	while (cmd_iter)
 	{
 		redirs_iter = cmd_iter->redirs;
@@ -30,7 +41,6 @@ t_here	*repeat_heredocs(t_cmd *cmd_head, t_env *env_head)
 			if (redirs_iter->type == HEREDOC)
 			{
 				here_node = do_a_heredoc(redirs_iter->str, env_head);
-				// printf("herenode:%s\n", here_node->filename);
 				if (here_node == NULL)
 					return (clear_here_n_return(here_head));
 				here_add_bottom(&here_head, here_node);
@@ -40,9 +50,6 @@ t_here	*repeat_heredocs(t_cmd *cmd_head, t_env *env_head)
 		}
 		cmd_iter = cmd_iter->next;
 	}
-	signal_setup();
-	if (g_exit_status < 0)
-		g_exit_status = 1;
 	return (here_head);
 }
 
@@ -101,12 +108,10 @@ void	write_heredoc(int fd, char *limiter, t_env *env_head)
 {
 	char	*line;
 	char	*expanded_line;
-	// char	*limiter_nl;
 
 	while (1 && g_exit_status > -1)
 	{
 		line = readline("> ");
-		// printf("write heredoc 108:%d|%s\n", g_exit_status, line);
 		if (g_exit_status < 0)
 			break ;
 		if (line == NULL)
@@ -121,73 +126,4 @@ void	write_heredoc(int fd, char *limiter, t_env *env_head)
 		free(expanded_line);
 		free(line);
 	}
-	// limiter_nl = ft_strjoin(limiter, "\n");
-	// if (limiter_nl == NULL)
-	// 	exit (1);
-	// while (1 && g_exit_status > -1)
-	// {
-	// 	ft_putstr_fd("> ", STDOUT_FILENO);
-	// 	line = get_next_line(STDIN_FILENO);
-	// 	// printf("write heredoc 108:%d|%s\n", g_exit_status, line);
-	// 	if (ft_strcmp(line, "") == 0 || ft_strcmp(line, "\n") == 0)
-	// 		break ;
-	// 	if (ft_strcmp(line, limiter_nl) == 0)
-	// 	{
-	// 		free(line);
-	// 		break ;
-	// 	}
-	// 	ft_putstr_fd(line, fd);
-	// 	free(line);
-	// }
-	// free(limiter_nl);
-}
-
-t_here	*free_n_return(char *str, int exit_code)
-{
-	free(str);
-	g_exit_status = exit_code;
-	return (NULL);
-}
-
-t_here	*clear_here_n_return(t_here *here_head)
-{
-	t_here	*iter;
-	t_here	*node_to_clear;
-
-	if (here_head == NULL)
-		return (NULL);
-	iter = here_head;
-	while (iter)
-	{
-		node_to_clear = iter;
-		iter = iter->next;
-		unlink(node_to_clear->filename);
-		free(node_to_clear->filename);
-		free(node_to_clear);
-	}
-	return (NULL);
-}
-
-void	here_add_bottom(t_here **here_head, t_here *here_doc)
-{
-	t_here	*iter;
-
-	if (*here_head == NULL)
-	{
-		*here_head = here_doc;
-		return ;
-	}
-	iter = *here_head;
-	while (iter->next)
-		iter = iter->next;
-	iter->next = here_doc;
-}
-
-void	update_redirs(t_token *redirs, t_here *here_doc)
-{
-	free(redirs->str);
-	redirs->str = ft_strdup(here_doc->filename);
-	if (redirs->str == NULL)
-		exit(EXIT_FAILURE);
-	redirs->type = INFILE;
 }
