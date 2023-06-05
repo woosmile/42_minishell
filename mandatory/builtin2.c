@@ -6,7 +6,7 @@
 /*   By: joonhlee <joonhlee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/23 21:10:43 by joonhlee          #+#    #+#             */
-/*   Updated: 2023/06/02 18:23:45 by joonhlee         ###   ########.fr       */
+/*   Updated: 2023/06/05 10:43:21 by joonhlee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,7 @@ char	*get_dest_path(t_cmd *cmd, t_env *env_head)
 {
 	char	*dest_path;
 
-	if (cmd->argv[1] == NULL
-		|| (cmd->argv[1] && ft_strcmp(cmd->argv[1], "~") == 0))
+	if (cmd->argv[1] == NULL)
 	{
 		dest_path = env_get_value(env_head, "HOME");
 		if (dest_path == NULL)
