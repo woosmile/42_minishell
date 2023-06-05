@@ -6,7 +6,7 @@
 /*   By: joonhlee <joonhlee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/19 08:37:24 by joonhlee          #+#    #+#             */
-/*   Updated: 2023/06/05 16:28:24 by joonhlee         ###   ########.fr       */
+/*   Updated: 2023/06/05 19:43:16 by joonhlee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,8 +76,8 @@ int	parent(int pid, t_cmd *cmd_head)
 	{
 		wpid = wait(&status);
 		if (WIFSIGNALED(status))
-			return (130);
-		if ((wpid == pid && WIFEXITED(status)))
+			g_exit_status = 130;
+		else if ((wpid == pid && WIFEXITED(status)))
 			g_exit_status = WEXITSTATUS(status);
 		n_cmd--;
 	}
