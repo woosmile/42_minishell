@@ -6,7 +6,7 @@
 /*   By: joonhlee <joonhlee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/05 16:34:03 by joonhlee          #+#    #+#             */
-/*   Updated: 2023/06/05 09:13:24 by joonhlee         ###   ########.fr       */
+/*   Updated: 2023/06/05 10:30:58 by joonhlee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,8 @@ void	clear_this_line(t_cmd **cmd_head, t_here **here_head, char **line)
 			free(cmd_to_clear->argv);
 		free(cmd_to_clear);
 	}
+	*cmd_head = NULL;
 	*here_head = clear_here_n_return(*here_head);
 	free(*line);
-	*line = 0;
+	*line = NULL;
 }
