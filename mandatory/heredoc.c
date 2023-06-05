@@ -6,7 +6,7 @@
 /*   By: joonhlee <joonhlee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 13:32:16 by joonhlee          #+#    #+#             */
-/*   Updated: 2023/06/02 18:21:30 by joonhlee         ###   ########.fr       */
+/*   Updated: 2023/06/05 19:30:54 by joonhlee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,10 @@ void	write_heredoc(int fd, char *limiter, t_env *env_head)
 	{
 		line = readline("> ");
 		if (g_exit_status < 0)
+		{
+			free(line);
 			break ;
+		}
 		if (line == NULL)
 			break ;
 		if (ft_strcmp(line, limiter) == 0)

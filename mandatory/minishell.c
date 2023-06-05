@@ -6,7 +6,7 @@
 /*   By: joonhlee <joonhlee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/05 16:34:03 by joonhlee          #+#    #+#             */
-/*   Updated: 2023/06/05 10:30:58 by joonhlee         ###   ########.fr       */
+/*   Updated: 2023/06/05 19:29:12 by joonhlee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int	main(int argc, char **argv, char **envp)
 	t_here	*here_head;
 
 	if (argc != 1 || argv[1] != 0)
-		return (126);
+		return (127);
 	signal_setup();
 	env_head = env_list_init(envp, NULL, NULL, NULL);
 	while (1)
