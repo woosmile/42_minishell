@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   shell_op.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: woosekim <woosekim@student.42.fr>          +#+  +:+       +#+        */
+/*   By: joonhlee <joonhlee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/19 08:37:24 by joonhlee          #+#    #+#             */
-/*   Updated: 2023/06/02 19:52:12 by woosekim         ###   ########.fr       */
+/*   Updated: 2023/06/05 10:17:38 by joonhlee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,7 @@ int	parent(int pid, t_cmd *cmd_head)
 	int		wpid;
 
 	n_cmd = parent_close_pfd(cmd_head);
+	parent_signal_setup();
 	cmd_iter = cmd_head;
 	while (n_cmd > 0)
 	{
@@ -78,6 +79,7 @@ int	parent(int pid, t_cmd *cmd_head)
 			g_exit_status = WEXITSTATUS(status);
 		n_cmd--;
 	}
+	signal_setup();
 	return (g_exit_status);
 }
 

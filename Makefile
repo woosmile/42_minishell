@@ -53,6 +53,7 @@ mandatory/str_split.c \
 mandatory/token_init_utils.c \
 mandatory/token_init.c \
 mandatory/signal.c \
+mandatory/signal2.c \
 mandatory/unquote.c
 
 MANDATORY_OBJS = $(MANDATORY_SRCS:.c=.o)

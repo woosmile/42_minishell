@@ -28,7 +28,7 @@ t_cmd	*words_redirs_init(t_cmd *cmd_head, t_cmd *cmd_temp, \
 			free(token_head);
 			token_head = token_temp;
 			token_head->prev = NULL;
-			cmd_temp->next = new_cmd_node(cmd_head);
+			cmd_temp->next = new_cmd_node(cmd_temp);
 			cmd_temp = cmd_temp->next;
 		}
 		else

@@ -6,7 +6,7 @@
 /*   By: joonhlee <joonhlee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/23 21:10:43 by joonhlee          #+#    #+#             */
-/*   Updated: 2023/06/02 18:25:48 by joonhlee         ###   ########.fr       */
+/*   Updated: 2023/06/05 09:29:39 by joonhlee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,15 +29,16 @@ int	ft_exit(t_cmd *cmd, int exit_code)
 	if (a == NULL)
 		exit (EXIT_FAILURE);
 	if (ft_strcmp(cmd->argv[1], a) != 0)
-		exit_numeric_error(cmd->argv[1], a);
+		exit_numeric_error(cmd, cmd->argv[1], a);
 	else
-		return (exit_too_many_error(cmd->argv[2], a, n));
+		return (exit_too_many_error(cmd, cmd->argv[2], a, n));
 	return (0);
 }
 
-void	exit_numeric_error(char *arg, char *a)
+void	exit_numeric_error(t_cmd *cmd, char *arg, char *a)
 {
-	ft_putstr_fd("exit\n", STDERR_FILENO);
+	if (cmd->prev == NULL && cmd->next == NULL)
+		ft_putstr_fd("exit\n", STDERR_FILENO);
 	ft_putstr_fd("minishell: exit: ", STDERR_FILENO);
 	ft_putstr_fd(arg, STDERR_FILENO);
 	ft_putstr_fd(": numeric argument required\n", STDERR_FILENO);
@@ -45,12 +46,13 @@ void	exit_numeric_error(char *arg, char *a)
 	exit(255);
 }
 
-int	exit_too_many_error(char *arg, char *a, int n)
+int	exit_too_many_error(t_cmd *cmd, char *arg, char *a, int n)
 {
 	free(a);
 	if (arg != NULL)
 	{
-		ft_putstr_fd("exit\n", STDERR_FILENO);
+		if (cmd->prev == NULL && cmd->next == NULL)
+			ft_putstr_fd("exit\n", STDERR_FILENO);
 		ft_putstr_fd("minishell: exit: too many arguments\n", STDERR_FILENO);
 		return (1);
 	}

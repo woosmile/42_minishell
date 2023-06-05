@@ -6,7 +6,7 @@
 /*   By: joonhlee <joonhlee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/15 16:35:13 by woosekim          #+#    #+#             */
-/*   Updated: 2023/06/02 20:45:05 by joonhlee         ###   ########.fr       */
+/*   Updated: 2023/06/05 10:17:02 by joonhlee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -183,7 +183,9 @@ void			ctrl_c_handler(int signum);
 void			ctrl_d_handler(t_env *env_head, char *line);
 void			here_signal_setup(void);
 void			here_ctrl_c_handler(int signum);
-void			clear_this_line(t_cmd *cmd_head, t_here *here_head, char *line);
+void			parent_signal_setup(void);
+void			clear_this_line(t_cmd **cmd_head, t_here **here_head, \
+									char **line);
 
 int				exec_cmds(t_cmd *cmd_head, t_env **env_head);
 int				manage_pipe(t_cmd *cmd);
@@ -232,8 +234,8 @@ int				export_syntax_error(char *name);
 int				ft_unset(t_cmd *cmd, t_env **env_head);
 int				ft_env(t_env *env_head);
 int				ft_exit(t_cmd *cmd, int exit_code);
-void			exit_numeric_error(char *arg, char *a);
-int				exit_too_many_error(char *arg, char *a, int n);
+void			exit_numeric_error(t_cmd *cmd, char *arg, char *a);
+int				exit_too_many_error(t_cmd *cmd, char *arg, char *a, int n);
 int				is_valid_name(char *str);
 int				env_set_value(t_env *env_head, char *name, char *value);
 char			*env_set_new_value(char *value);

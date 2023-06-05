@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: woosekim <woosekim@student.42.fr>          +#+  +:+       +#+        */
+/*   By: joonhlee <joonhlee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/05 16:34:03 by joonhlee          #+#    #+#             */
-/*   Updated: 2023/06/02 19:52:04 by woosekim         ###   ########.fr       */
+/*   Updated: 2023/06/05 09:13:24 by joonhlee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,17 +36,17 @@ int	main(int argc, char **argv, char **envp)
 			here_head = repeat_heredocs(cmd_head, env_head);
 		if (g_exit_status == 0)
 			g_exit_status = exec_cmds(cmd_head, &env_head);
-		clear_this_line(cmd_head, here_head, line);
+		clear_this_line(&cmd_head, &here_head, &line);
 	}
 	return (0);
 }
 
-void	clear_this_line(t_cmd *cmd_head, t_here *here_head, char *line)
+void	clear_this_line(t_cmd **cmd_head, t_here **here_head, char **line)
 {
 	t_cmd		*cmd_iter;
 	t_cmd		*cmd_to_clear;
 
-	cmd_iter = cmd_head;
+	cmd_iter = *cmd_head;
 	while (cmd_iter)
 	{
 		cmd_to_clear = cmd_iter;
@@ -59,7 +59,7 @@ void	clear_this_line(t_cmd *cmd_head, t_here *here_head, char *line)
 			free(cmd_to_clear->argv);
 		free(cmd_to_clear);
 	}
-	clear_here_n_return(here_head);
-	free(line);
-	line = 0;
+	*here_head = clear_here_n_return(*here_head);
+	free(*line);
+	*line = 0;
 }
