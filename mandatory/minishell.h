@@ -6,7 +6,7 @@
 /*   By: joonhlee <joonhlee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/15 16:35:13 by woosekim          #+#    #+#             */
-/*   Updated: 2023/06/05 10:17:02 by joonhlee         ###   ########.fr       */
+/*   Updated: 2023/06/05 10:51:45 by joonhlee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,6 @@ int				error_handling(int select);
 
 void			free_double_ptr(char **ptr);
 void			env_list_free(t_env *head);
-void			cmd_list_free(t_cmd	*cmd_head);
 void			token_list_free(t_token *token_head);
 
 t_env			*env_list_init(char **envp, t_env *env_head, \

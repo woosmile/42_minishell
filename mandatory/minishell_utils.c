@@ -42,21 +42,6 @@ void	env_list_free(t_env *head)
 	}
 }
 
-void	cmd_list_free(t_cmd	*cmd_head)
-{
-	t_cmd	*temp;
-
-	temp = cmd_head;
-	while (temp != NULL)
-	{
-		token_list_free(temp->redirs);
-		token_list_free(temp->words);
-		temp = cmd_head->next;
-		free(cmd_head);
-		cmd_head = temp;
-	}
-}
-
 int	error_handling(int select)
 {
 	if (select == 1)

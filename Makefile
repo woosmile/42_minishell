@@ -1,7 +1,7 @@
 NAME = minishell
 
 CC = cc
-CFLAGS = -Werror -Wall -Wextra -g
+CFLAGS = -Werror -Wall -Wextra
 LDFLAGS = 	-L./libft -lft \
 			-L./readline/lib -lreadline \
 			-L./readline/lib -lhistory
