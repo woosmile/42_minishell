@@ -6,7 +6,7 @@
 /*   By: joonhlee <joonhlee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/05 16:34:03 by joonhlee          #+#    #+#             */
-/*   Updated: 2023/06/02 18:17:20 by joonhlee         ###   ########.fr       */
+/*   Updated: 2023/06/06 17:25:15 by joonhlee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,15 +57,17 @@ void	here_ctrl_c_handler(int signum)
 {
 	if (signum != SIGINT)
 		return ;
-	if (g_exit_status == 0)
-	{
-		ft_putstr_fd("\n(press enter)", STDOUT_FILENO);
-		rl_replace_line("", 1);
-	}
-	else
-	{
-		ft_putstr_fd("(press enter)", STDOUT_FILENO);
-		rl_replace_line("", 1);
-	}
+	printf("\n");
+	close(STDIN_FILENO);
+	// if (g_exit_status == 0)
+	// {
+	// 	ft_putstr_fd("\n(press enter)", STDOUT_FILENO);
+	// 	rl_replace_line("", 1);
+	// }
+	// else
+	// {
+	// 	ft_putstr_fd("(press enter)", STDOUT_FILENO);
+	// 	rl_replace_line("", 1);
+	// }
 	g_exit_status = -1;
 }

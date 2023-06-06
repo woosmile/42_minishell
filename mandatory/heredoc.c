@@ -6,7 +6,7 @@
 /*   By: joonhlee <joonhlee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 13:32:16 by joonhlee          #+#    #+#             */
-/*   Updated: 2023/06/05 19:30:54 by joonhlee         ###   ########.fr       */
+/*   Updated: 2023/06/06 17:58:51 by joonhlee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,23 @@
 t_here	*repeat_heredocs(t_cmd *cmd_head, t_env *env_head)
 {
 	t_here	*here_head;
+	int		stdin_fd;
 
+	stdin_fd = dup(STDIN_FILENO);
+	if (stdin_fd == -1)
+	{
+		perror("minishell");
+		return (NULL);
+	}
 	here_signal_setup();
 	here_head = here_iter(cmd_head, env_head);
 	signal_setup();
 	if (g_exit_status < 0)
+	{
 		g_exit_status = 1;
+		dup2(stdin_fd, STDIN_FILENO);
+	}
+	close(stdin_fd);
 	return (here_head);
 }
 
