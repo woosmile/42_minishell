@@ -77,11 +77,14 @@ clean :
 	$(MAKE) $(MFLAGS) $(READLINE_DIR) clean
 	$(RM) $(RMFLAGS) $(MANDATORY_OBJS)
 
-fclean : clean
+fclean :
+	$(MAKE) clean
 	$(MAKE) $(MFLAGS) $(LIBFT_DIR) fclean
 	$(MAKE) $(MFLAGS) $(READLINE_DIR) fclean
 	$(RM) $(RMFLAGS) $(NAME)
 
-re : fclean all
+re :
+	$(MAKE) fclean
+	$(MAKE) all
 
 .PHONY : all clean fclean re
