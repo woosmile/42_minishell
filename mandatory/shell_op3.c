@@ -6,7 +6,7 @@
 /*   By: joonhlee <joonhlee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/19 08:37:24 by joonhlee          #+#    #+#             */
-/*   Updated: 2023/06/07 16:46:41 by joonhlee         ###   ########.fr       */
+/*   Updated: 2023/06/08 07:43:42 by joonhlee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,6 @@ int	child(t_cmd *cmd, t_env **env_head)
 	child_init(cmd);
 	child_redirs(cmd);
 	cmd->argv = words_lst_to_arr(cmd);
-	if (cmd->argv == NULL)
-		exit (perror_return("malloc", 1));
 	if (cmd->argv[0] == NULL)
 		exit (0);
 	if (is_builtin(cmd->argv[0]))
@@ -29,6 +27,7 @@ int	child(t_cmd *cmd, t_env **env_head)
 	if (envp == 0)
 		exit (perror_return("malloc", 1));
 	cmd->cmd_path = find_cmd_path(cmd->argv[0], envp);
+	child_signal_setup();
 	if (execve(cmd->cmd_path, cmd->argv, envp) == -1)
 	{
 		close(STDIN_FILENO);
@@ -43,7 +42,6 @@ int	child(t_cmd *cmd, t_env **env_head)
 
 void	child_init(t_cmd *cmd)
 {
-	child_signal_setup();
 	if (cmd->prev != NULL)
 	{
 		close(cmd->prev_pfd[1]);
