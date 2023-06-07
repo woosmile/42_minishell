@@ -6,7 +6,7 @@
 /*   By: joonhlee <joonhlee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/19 08:37:24 by joonhlee          #+#    #+#             */
-/*   Updated: 2023/06/02 20:19:39 by joonhlee         ###   ########.fr       */
+/*   Updated: 2023/06/07 16:46:41 by joonhlee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ int	child(t_cmd *cmd, t_env **env_head)
 
 void	child_init(t_cmd *cmd)
 {
+	child_signal_setup();
 	if (cmd->prev != NULL)
 	{
 		close(cmd->prev_pfd[1]);

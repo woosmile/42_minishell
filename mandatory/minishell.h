@@ -6,7 +6,7 @@
 /*   By: joonhlee <joonhlee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/15 16:35:13 by woosekim          #+#    #+#             */
-/*   Updated: 2023/06/05 10:51:45 by joonhlee         ###   ########.fr       */
+/*   Updated: 2023/06/07 16:59:29 by joonhlee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 # include <limits.h>
 # include <termios.h>
 # include "libft.h"
+# include "get_next_line.h"
 # include "readline.h"
 # include "history.h"
 
@@ -183,6 +184,9 @@ void			ctrl_d_handler(t_env *env_head, char *line);
 void			here_signal_setup(void);
 void			here_ctrl_c_handler(int signum);
 void			parent_signal_setup(void);
+void			parent_ctrl_c_handler(int signum);
+void			parent_ctrl_slash_handler(int signum);
+void			child_signal_setup(void);
 void			clear_this_line(t_cmd **cmd_head, t_here **here_head, \
 									char **line);
 

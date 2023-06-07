@@ -6,7 +6,7 @@
 /*   By: joonhlee <joonhlee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/05 16:34:03 by joonhlee          #+#    #+#             */
-/*   Updated: 2023/06/06 18:02:13 by joonhlee         ###   ########.fr       */
+/*   Updated: 2023/06/07 16:29:49 by joonhlee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ void	here_ctrl_c_handler(int signum)
 {
 	if (signum != SIGINT)
 		return ;
-	printf("\n");
+	ft_putstr_fd("\n", STDOUT_FILENO);
 	close(STDIN_FILENO);
 	g_exit_status = -1;
 }

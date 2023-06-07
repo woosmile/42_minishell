@@ -21,10 +21,11 @@ READLINE_LIB = $(READLINE_DIR)lib/libreadline.a $(READLINE_DIR)lib/libhistory.a
 HEADER = \
 ./mandatory/minishell.h \
 $(LIBFT_DIR)libft.h \
+./gnl/get_next_line.h \
 ./readline/include/readline/readline.h \
 ./readline/include/readline/history.h
 
-INCLUDES = -I./mandatory -I./readline/include/readline -I./libft
+INCLUDES = -I./mandatory -I./readline/include/readline -I./libft -I./gnl
 
 MANDATORY_SRCS = \
 mandatory/builtin.c \
@@ -54,7 +55,9 @@ mandatory/token_init_utils.c \
 mandatory/token_init.c \
 mandatory/signal.c \
 mandatory/signal2.c \
-mandatory/unquote.c
+mandatory/unquote.c \
+gnl/get_next_line.c \
+gnl/get_next_line_utils.c
 
 MANDATORY_OBJS = $(MANDATORY_SRCS:.c=.o)
 
