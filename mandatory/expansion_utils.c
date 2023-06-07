@@ -6,7 +6,7 @@
 /*   By: woosekim <woosekim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/02 16:41:28 by woosekim          #+#    #+#             */
-/*   Updated: 2023/06/02 18:18:36 by woosekim         ###   ########.fr       */
+/*   Updated: 2023/06/07 17:55:18 by woosekim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ t_token	*tokenize_str(char *str_w_value, t_token *token)
 		return (token_new_head);
 	}
 	else if (n_split == 0)
-		return (NULL);
+		return (free_double_ptr(split));
 	type_arr = check_ingredient_exp_arr(split, token->type);
 	token_new_head = token_list_init(split, type_arr, NULL, NULL);
 	free_double_ptr(split);

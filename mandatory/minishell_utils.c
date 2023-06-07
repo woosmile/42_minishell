@@ -12,12 +12,12 @@
 
 #include "minishell.h"
 
-void	free_double_ptr(char **ptr)
+t_token	*free_double_ptr(char **ptr)
 {
 	int	i;
 
 	if (ptr == NULL)
-		return ;
+		return (NULL);
 	i = 0;
 	while (ptr[i])
 	{
@@ -25,6 +25,7 @@ void	free_double_ptr(char **ptr)
 		i++;
 	}
 	free (ptr);
+	return (NULL);
 }
 
 void	env_list_free(t_env *head)

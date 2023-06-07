@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: joonhlee <joonhlee@student.42.fr>          +#+  +:+       +#+        */
+/*   By: woosekim <woosekim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/15 16:35:13 by woosekim          #+#    #+#             */
-/*   Updated: 2023/06/07 16:59:29 by joonhlee         ###   ########.fr       */
+/*   Updated: 2023/06/07 17:48:49 by woosekim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ int						g_exit_status;
 
 int				error_handling(int select);
 
-void			free_double_ptr(char **ptr);
+t_token			*free_double_ptr(char **ptr);
 void			env_list_free(t_env *head);
 void			token_list_free(t_token *token_head);
 
