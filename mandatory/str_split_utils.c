@@ -29,7 +29,7 @@ void	check_metacharacter(const char *s, int *i, size_t *cnt, char *word_rec)
 {
 	char	*charset;
 
-	charset = "<>| ";
+	charset = "<>| \t";
 	if (!ft_strncmp(s, "<", 1))
 	{
 		if (!ft_strncmp(s + 1, "<", 1))
@@ -57,7 +57,7 @@ void	check_exp_metacharacter(const char *s, int *i, \
 {
 	char	*charset;
 
-	charset = " ";
+	charset = " \t";
 	if (!check_sep(*s, charset) && check_sep(*(s + 1), charset))
 	{
 		(*cnt)++;
@@ -88,8 +88,8 @@ int	blank_masking(char *s, size_t s_len, char *word_rec)
 		check_quotes(s[i], &q);
 		if (q.detect == 0)
 		{
-			if (s[i] == ' ')
-				word_rec[i] = ' ';
+			if (s[i] == ' ' || s[i] == '\t')
+				word_rec[i] = s[i];
 		}
 		i++;
 	}

@@ -6,7 +6,7 @@
 /*   By: woosekim <woosekim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/02 16:41:28 by woosekim          #+#    #+#             */
-/*   Updated: 2023/06/07 17:55:18 by woosekim         ###   ########.fr       */
+/*   Updated: 2023/06/09 14:38:28 by woosekim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,8 @@ void	word_type_recording(char *str, char *word_rec, \
 	else if ((str[i] == '$' && exp_flag == 1) || \
 			str[i] == '\"' || str[i] == '\'' || \
 			str[i] == '>' || str[i] == '<' || \
-			str[i] == '|' || str[i] == ' ' || \
-			str[i] == '?')
+			str[i] == '|' || str[i] == '?' || \
+			str[i] == ' ' || str[i] == '\t')
 	{
 		word_rec[i] = str[i];
 		dollar_flag = 0;
