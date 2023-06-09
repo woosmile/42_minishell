@@ -6,7 +6,7 @@
 /*   By: joonhlee <joonhlee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/05 16:34:03 by joonhlee          #+#    #+#             */
-/*   Updated: 2023/06/07 16:29:49 by joonhlee         ###   ########.fr       */
+/*   Updated: 2023/06/09 10:15:00 by joonhlee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void	ctrl_d_handler(t_env *env_head, char *line)
 {
 	ft_putstr_fd("\033[1A", STDOUT_FILENO);
 	ft_putstr_fd("\033[11C", STDOUT_FILENO);
-	ft_putstr_fd("exit", STDOUT_FILENO);
+	ft_putstr_fd("exit\n", STDOUT_FILENO);
 	env_list_free(env_head);
 	free(line);
 	exit(0);

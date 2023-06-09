@@ -6,7 +6,7 @@
 /*   By: joonhlee <joonhlee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/23 21:10:43 by joonhlee          #+#    #+#             */
-/*   Updated: 2023/06/05 09:29:39 by joonhlee         ###   ########.fr       */
+/*   Updated: 2023/06/09 10:35:56 by joonhlee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,43 +16,62 @@ int	ft_exit(t_cmd *cmd, int exit_code)
 {
 	int		i;
 	int		n;
-	char	*a;
 
+	if (cmd->prev == NULL && cmd->next == NULL)
+		ft_putstr_fd("exit\n", STDERR_FILENO);
 	i = 1;
 	if (cmd->argv[i] == NULL)
 	{
-		ft_putstr_fd("exit\n", STDERR_FILENO);
-		exit(exit_code);
+		exit(g_exit_status);
 	}
-	n = ft_atoi(cmd->argv[1]);
-	a = ft_itoa(n);
-	if (a == NULL)
-		exit (EXIT_FAILURE);
-	if (ft_strcmp(cmd->argv[1], a) != 0)
-		exit_numeric_error(cmd, cmd->argv[1], a);
+	n = ft_exit_atoi(cmd->argv[1], &i);
+	if (i != 1)
+		exit_numeric_error(cmd->argv[1]);
 	else
-		return (exit_too_many_error(cmd, cmd->argv[2], a, n));
-	return (0);
+		return (exit_too_many_error(cmd->argv[2], n));
+	return (exit_code);
 }
 
-void	exit_numeric_error(t_cmd *cmd, char *arg, char *a)
+int	ft_exit_atoi(const char *str, int *check)
 {
-	if (cmd->prev == NULL && cmd->next == NULL)
-		ft_putstr_fd("exit\n", STDERR_FILENO);
+	int		i;
+	int		sign;
+	long	nbr;
+
+	i = 0;
+	sign = 1;
+	nbr = 0;
+	while (str[i] == ' ' || (str[i] >= '\t' && str[i] <= '\r'))
+		i++;
+	if (str[i] == '+' || str[i] == '-')
+		sign = 44 - str[i++];
+	while (str[i] && *check == 1)
+	{
+		if (str[i] < '0' || str[i] > '9')
+			*check = 0;
+		else if (sign > 0 && ((nbr > LONG_MAX / 10)
+				|| (nbr == LONG_MAX / 10 && str[i] - '0' > LONG_MAX % 10)))
+			*check = 0;
+		else if (sign < 0 && ((nbr < LONG_MIN / 10) || (nbr == LONG_MIN / 10
+					&& sign * (str[i] - '0') < LONG_MIN % 10)))
+			*check = 0;
+		nbr = nbr * 10 + sign * (str[i++] - '0');
+	}
+	return ((int)nbr);
+}
+
+void	exit_numeric_error(char *arg)
+{
 	ft_putstr_fd("minishell: exit: ", STDERR_FILENO);
 	ft_putstr_fd(arg, STDERR_FILENO);
 	ft_putstr_fd(": numeric argument required\n", STDERR_FILENO);
-	free(a);
 	exit(255);
 }
 
-int	exit_too_many_error(t_cmd *cmd, char *arg, char *a, int n)
+int	exit_too_many_error(char *arg, int n)
 {
-	free(a);
 	if (arg != NULL)
 	{
-		if (cmd->prev == NULL && cmd->next == NULL)
-			ft_putstr_fd("exit\n", STDERR_FILENO);
 		ft_putstr_fd("minishell: exit: too many arguments\n", STDERR_FILENO);
 		return (1);
 	}

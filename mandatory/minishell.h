@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: woosekim <woosekim@student.42.fr>          +#+  +:+       +#+        */
+/*   By: joonhlee <joonhlee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/15 16:35:13 by woosekim          #+#    #+#             */
-/*   Updated: 2023/06/07 17:48:49 by woosekim         ###   ########.fr       */
+/*   Updated: 2023/06/09 10:29:57 by joonhlee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -237,8 +237,9 @@ int				export_syntax_error(char *name);
 int				ft_unset(t_cmd *cmd, t_env **env_head);
 int				ft_env(t_env *env_head);
 int				ft_exit(t_cmd *cmd, int exit_code);
-void			exit_numeric_error(t_cmd *cmd, char *arg, char *a);
-int				exit_too_many_error(t_cmd *cmd, char *arg, char *a, int n);
+int				ft_exit_atoi(const char *str, int *check);
+void			exit_numeric_error(char *arg);
+int				exit_too_many_error(char *arg, int n);
 int				is_valid_name(char *str);
 int				env_set_value(t_env *env_head, char *name, char *value);
 char			*env_set_new_value(char *value);
