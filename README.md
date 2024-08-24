@@ -1,7 +1,7 @@
 # minishell
 
 - C언어로 Shell을 구현하는 팀 과제
-- Bash Shell 기반으로 진행
+- Bash Shell 기반
 
 ## 쉘 문법
 
